@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend works on port 4500",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongoose"
+  ],
+  "author": "nanoDW",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.0.1",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.4.0",
+    "nodemon": "^1.18.9"
+  }
+}
