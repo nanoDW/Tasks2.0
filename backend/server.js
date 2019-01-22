@@ -13,12 +13,13 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
+const db = config.get("db");
 mongoose
   .connect(
-    "mongodb://nanoDW:unique11password@ds159634.mlab.com:59634/tasks",
+    db,
     { useNewUrlParser: true }
   )
-  .then(() => console.log("Connected to the MongoDB."))
+  .then(() => console.log(`Connected to the MongoDB: ${db}.`))
   .catch(err =>
     console.log("Connection error. Cannot connect to the MongoDB", err.message)
   );
@@ -47,6 +48,8 @@ app.get("*", function(req, res) {
 });
 
 const port = process.env.PORT || 4500;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Working on port ${port}`);
 });
+
+module.exports = server;
