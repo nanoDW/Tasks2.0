@@ -7,14 +7,16 @@ describe("getUsers", () => {
     server = require("../../server");
   });
   afterEach(async done => {
-    server.close();
-    await User.remove({});
-    done();
+    User.deleteMany({}, () => {
+      server.close(() => {
+        done();
+      });
+    });
   });
 
   describe("GET /api/users", () => {
     it("shoud return not hidden users", async done => {
-      User.collection.insertMany([
+      await User.collection.insertMany([
         {
           nick: "person1",
           password: "strong_password",

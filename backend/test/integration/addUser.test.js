@@ -7,13 +7,14 @@ describe("addUsers", () => {
     server = require("../../server");
   });
   afterEach(async done => {
-    server.close();
-    await User.remove({});
-    done();
+    await server.close();
+    await User.deleteMany({}, () => {
+      done();
+    });
   });
 
   describe("POST /api/users", () => {
-    it("shoud return data about user", async done => {
+    it("should return data about user", async done => {
       const res = await request(server)
         .post("/api/users")
         .send({
