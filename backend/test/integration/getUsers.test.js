@@ -6,13 +6,14 @@ describe("getUsers", () => {
   beforeEach(() => {
     server = require("../../server");
   });
-  afterEach(async () => {
+  afterEach(async done => {
     server.close();
     await User.remove({});
+    done();
   });
 
   describe("GET /api/users", () => {
-    it("shoud return not hidden users", async () => {
+    it("shoud return not hidden users", async done => {
       User.collection.insertMany([
         {
           nick: "person1",
@@ -71,6 +72,7 @@ describe("getUsers", () => {
         expect(user).toHaveProperty("_id");
         expect(user).toHaveProperty("last");
       });
+      done();
     });
   });
 });
