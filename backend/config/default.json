@@ -1,0 +1,4 @@
+{
+  "jwtPrivateKey": "",
+  "db": "mongodb://nanoDW:unique11password@ds159634.mlab.com:59634/tasks"
+}
