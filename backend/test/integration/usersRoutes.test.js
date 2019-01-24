@@ -44,6 +44,40 @@ describe("all users routes", () => {
   });
 
   describe("POST /api/users", () => {
+    it("should throw validation error: nick length is too short", async () => {
+      const res = await request(server)
+        .post("/api/users")
+        .send({
+          nick: "1",
+          password: "strong_password",
+          email: "person1@gmail.com"
+        })
+        .set("Accept", "application/json");
+
+      expect(res.status).toBe(400);
+      expect(res.text).toBe('"nick" length must be at least 3 characters long');
+    });
+  });
+
+  describe("POST /api/users", () => {
+    it("should throw validation error: nick length is too long", async () => {
+      const res = await request(server)
+        .post("/api/users")
+        .send({
+          nick: "person1person1person1person1",
+          password: "strong_password",
+          email: "person1@gmail.com"
+        })
+        .set("Accept", "application/json");
+
+      expect(res.status).toBe(400);
+      expect(res.text).toBe(
+        '"nick" length must be less than or equal to 25 characters long'
+      );
+    });
+  });
+
+  describe("POST /api/users", () => {
     it("should throw validation error: password is required", async () => {
       const res = await request(server)
         .post("/api/users")
@@ -60,6 +94,42 @@ describe("all users routes", () => {
   });
 
   describe("POST /api/users", () => {
+    it("should throw validation error: password is too short", async () => {
+      const res = await request(server)
+        .post("/api/users")
+        .send({
+          nick: "person1",
+          password: "p",
+          email: "person1@gmail.com"
+        })
+        .set("Accept", "application/json");
+
+      expect(res.status).toBe(400);
+      expect(res.text).toBe(
+        '"password" length must be at least 8 characters long'
+      );
+    });
+  });
+
+  describe("POST /api/users", () => {
+    it("should throw validation error: password is too long", async () => {
+      const res = await request(server)
+        .post("/api/users")
+        .send({
+          nick: "person1",
+          password: "veryverystrongpasswordorverylongidontcare",
+          email: "person1@gmail.com"
+        })
+        .set("Accept", "application/json");
+
+      expect(res.status).toBe(400);
+      expect(res.text).toBe(
+        '"password" length must be less than or equal to 30 characters long'
+      );
+    });
+  });
+
+  describe("POST /api/users", () => {
     it("should throw validation error: email is required", async () => {
       const res = await request(server)
         .post("/api/users")
@@ -72,6 +142,56 @@ describe("all users routes", () => {
 
       expect(res.status).toBe(400);
       expect(res.text).toBe('"email" is not allowed to be empty');
+    });
+  });
+
+  describe("POST /api/users", () => {
+    it("should throw validation error: too short email", async () => {
+      const res = await request(server)
+        .post("/api/users")
+        .send({
+          nick: "person1",
+          password: "strong_password",
+          email: "email"
+        })
+        .set("Accept", "application/json");
+
+      expect(res.status).toBe(400);
+      expect(res.text).toBe(
+        '"email" length must be at least 8 characters long'
+      );
+    });
+  });
+
+  describe("POST /api/users", () => {
+    it("should throw validation error: not valid email", async () => {
+      const res = await request(server)
+        .post("/api/users")
+        .send({
+          nick: "person1",
+          password: "strong_password",
+          email: "emailemail"
+        })
+        .set("Accept", "application/json");
+
+      expect(res.status).toBe(400);
+      expect(res.text).toBe('"email" must be a valid email');
+    });
+  });
+
+  describe("POST /api/users", () => {
+    it("should throw validation error: not valid email", async () => {
+      const res = await request(server)
+        .post("/api/users")
+        .send({
+          nick: "person1",
+          password: "strong_password",
+          email: "emailemail@email"
+        })
+        .set("Accept", "application/json");
+
+      expect(res.status).toBe(400);
+      expect(res.text).toBe('"email" must be a valid email');
     });
   });
 
