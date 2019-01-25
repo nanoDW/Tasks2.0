@@ -1,11 +1,8 @@
 const express = require("express");
 const config = require("config");
 const mongoose = require("mongoose");
-const auth = require("./middleware/auth");
+const users = require("./routes/users");
 const error = require("./middleware/error");
-const addUser = require("./routes/addUser");
-const getUsers = require("./routes/getUsers");
-const getHiddenUsers = require("./routes/getHiddenUsers");
 
 const app = express();
 
@@ -41,9 +38,7 @@ app.get("/", (req, res, next) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.post("/api/users", addUser);
-app.get("/api/users", getUsers);
-app.get("/api/users/hidden", getHiddenUsers);
+app.use("/api/users", users);
 app.use(error);
 app.get("*", function(req, res) {
   res.status(404).send("Error 404. Not found");

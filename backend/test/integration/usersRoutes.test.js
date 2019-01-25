@@ -28,6 +28,22 @@ describe("all users routes", () => {
   });
 
   describe("POST /api/users", () => {
+    it("should add user to the db and get it", async () => {
+      await request(server)
+        .post("/api/users")
+        .send({
+          nick: "person1",
+          password: "strong_password",
+          email: "person1@gmail.com"
+        })
+        .set("Accept", "application/json");
+      const res = await request(server).get("/api/users/hidden");
+      expect(res.status).toBe(200);
+      expect(res.body.users[0]).toHaveProperty("nick");
+    });
+  });
+
+  describe("POST /api/users", () => {
     it("should throw validation error: nick is required", async () => {
       const res = await request(server)
         .post("/api/users")

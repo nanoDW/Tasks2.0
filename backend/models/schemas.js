@@ -46,6 +46,20 @@ const todoSchema = new Schema(
   }
 );
 
+const friendshipSchema = new Schema({
+  user: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 30
+  },
+  accepted: {
+    type: Boolean,
+    required: true,
+    default: false
+  }
+});
+
 const userSchema = new Schema(
   {
     nick: {
@@ -77,7 +91,8 @@ const userSchema = new Schema(
     hidden: {
       type: Boolean,
       default: false
-    }
+    },
+    friends: [friendshipSchema]
   },
   {
     collection: "users"
@@ -123,5 +138,6 @@ const messageSchema = new Schema(
 module.exports = {
   Todo: mongoose.model("Todo", todoSchema),
   User: mongoose.model("User", userSchema),
-  Message: mongoose.model("Message", messageSchema)
+  Message: mongoose.model("Message", messageSchema),
+  Friendship: mongoose.model("Friends", friendshipSchema)
 };
