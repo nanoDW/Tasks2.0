@@ -1,6 +1,4 @@
-const mongoose = require("mongoose");
-
-const Schema = mongoose.Schema;
+const { model, Schema } = require("mongoose");
 
 const todoSchema = new Schema(
   {
@@ -52,6 +50,10 @@ const friendshipSchema = new Schema({
     required: true,
     minlength: 3,
     maxlength: 30
+  },
+  userID: {
+    type: String,
+    required: true
   },
   accepted: {
     type: Boolean,
@@ -136,8 +138,8 @@ const messageSchema = new Schema(
 );
 
 module.exports = {
-  Todo: mongoose.model("Todo", todoSchema),
-  User: mongoose.model("User", userSchema),
-  Message: mongoose.model("Message", messageSchema),
-  Friendship: mongoose.model("Friends", friendshipSchema)
+  Todo: model("Todo", todoSchema),
+  User: model("User", userSchema),
+  Message: model("Message", messageSchema),
+  Friendship: model("Friends", friendshipSchema)
 };

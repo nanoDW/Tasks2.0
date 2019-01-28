@@ -48,4 +48,39 @@ const validateUser = user => {
   return Joi.validate(user, schema);
 };
 
-module.exports = { validateTodo, validateUser };
+const validatePasswordAndEmail = data => {
+  const schema = {
+    password: Joi.string()
+      .min(8)
+      .max(30),
+    email: Joi.string()
+      .min(8)
+      .max(40)
+      .email({ minDomainAtoms: 2 })
+  };
+  return Joi.validate(data, schema);
+};
+
+const validateLogAndPass = data => {
+  const schema = {
+    nick: Joi.string()
+      .min(3)
+      .max(15)
+      .alphanum()
+      .required()
+      .trim(),
+    password: Joi.string()
+      .min(8)
+      .max(20)
+      .required()
+      .trim()
+  };
+  return Joi.validate(data, schema);
+};
+
+module.exports = {
+  validateTodo,
+  validateUser,
+  validatePasswordAndEmail,
+  validateLogAndPass
+};

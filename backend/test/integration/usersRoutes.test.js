@@ -288,7 +288,19 @@ describe("all users routes", () => {
           hidden: false
         }
       ]);
-      const res = await request(server).get("/api/users");
+      const { header } = await request(server)
+        .post("/api/users")
+        .send({
+          nick: "person1",
+          password: "strong_password",
+          email: "person1@gmail.com"
+        })
+        .set("Accept", "application/json");
+      console.log(JSON.parse(header));
+      const res = await request(server)
+        .get("/api/users")
+        .set("xAuthToken", header("xAuthToken"));
+
       expect(res.status).toBe(200);
       expect(res.body.data.length).toBe(4);
       res.body.data.map(user => {

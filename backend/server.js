@@ -3,6 +3,7 @@ const config = require("config");
 const mongoose = require("mongoose");
 const users = require("./routes/users");
 const error = require("./middleware/error");
+const auth = require("./routes/auth");
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use(function(req, res, next) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  res.header("Access-Control-Expose-Headers", "x-auth-token");
+  res.header("Access-Control-Expose-Headers", "xAuthToken");
   next();
 });
 
@@ -38,6 +39,7 @@ app.get("/", (req, res, next) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api/auth", auth);
 app.use("/api/users", users);
 app.use(error);
 app.get("*", function(req, res) {
