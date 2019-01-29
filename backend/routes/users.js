@@ -98,7 +98,8 @@ router.get("/user/:id", auth, async (req, res) => {
       return res.status(404).send("User of given id does not exist.");
     }
 
-    res.json({ user });
+    const { nick, _id, last, accountCreated } = user;
+    res.json({ nick, _id, last, accountCreated });
   } catch (e) {
     console.log(e.message);
 
@@ -126,7 +127,8 @@ router.put("/addNote", auth, async (req, res) => {
       return res.status(404).send("User of given id does not exist.");
     }
 
-    return res.json({ user });
+    const { last } = user;
+    return res.json({ last });
   } catch (e) {
     console.log(e.message);
 
@@ -136,9 +138,9 @@ router.put("/addNote", auth, async (req, res) => {
   }
 });
 
-router.put("/setting", auth, async (req, res) => {
+router.put("/settings", auth, async (req, res) => {
   try {
-    let message;
+    let message = null;
     const { error } = validatePasswordAndEmail(req.body);
 
     if (error) {
@@ -268,5 +270,7 @@ router.delete("/friends/:id", auth, async (req, res) => {
     return res.status(500).send("Internal server error. Cannot delete friend.");
   }
 });
+
+router.delete("/");
 
 module.exports = router;

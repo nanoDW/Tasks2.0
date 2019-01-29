@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { get } = require("config");
+const config = require("config");
 const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const express = require("express");
@@ -28,12 +28,12 @@ router.post("/", async (req, res) => {
       _id: existingUser._id,
       nick: existingUser.nick
     },
-    get("jwtPrivateKey")
+    config.get("jwtPrivateKey")
   );
 
   return res
     .header("xAuthToken", token)
-    .send(_.pick(existingUser, ["_id", "name", "email"]));
+    .send(_.pick(existingUser, ["_id", "nick", "email"]));
 });
 
 module.exports = router;

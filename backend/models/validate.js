@@ -5,11 +5,13 @@ const validateTodo = todo => {
     author: Joi.string()
       .min(3)
       .max(25)
-      .required(),
+      .required()
+      .trim(),
     user: Joi.string()
       .min(3)
       .max(25)
-      .required(),
+      .required()
+      .trim(),
     description: Joi.string()
       .min(2)
       .max(160)
@@ -31,16 +33,19 @@ const validateUser = user => {
     nick: Joi.string()
       .min(3)
       .max(25)
-      .required(),
+      .required()
+      .trim(),
     password: Joi.string()
       .min(8)
       .max(30)
-      .required(),
+      .required()
+      .trim(),
     email: Joi.string()
       .min(8)
       .max(40)
       .email({ minDomainAtoms: 2 })
-      .required(),
+      .required()
+      .trim(),
     accountCreated: Joi.string()
       .min(10)
       .max(30)
@@ -52,11 +57,13 @@ const validatePasswordAndEmail = data => {
   const schema = {
     password: Joi.string()
       .min(8)
-      .max(30),
+      .max(30)
+      .trim(),
     email: Joi.string()
       .min(8)
       .max(40)
       .email({ minDomainAtoms: 2 })
+      .trim()
   };
   return Joi.validate(data, schema);
 };
