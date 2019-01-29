@@ -243,32 +243,29 @@ router.put("/acceptFriend", auth, async (req, res) => {
   }
 });
 
-router.put("/acceptFriend", auth, async (req, res) => {
+router.delete("/friends/:id", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    for (let i = 0; i < user.friends.length; i++) {
-      const friend = user.friends[i];
-      if (friend.userID === req.body._id) {
-        if (friend.accepted === true) {
-          return res
-            .status(400)
-            .send("Cannot accept an invitation. It has been already accepted.");
-        }
-      } else {
-        friend.accepted = true;
-      }
+    if (!user) {
+      return res.status(400).send("Error! Cannot find user.");
     }
 
-    await user.save();
+    let updatedList = [];
+    user.friends.map(friend => {
+      if (friend.userID !== req.params.id) {
+        updatedList.push(friend);
+      }
+    });
 
-    return res.status(200).send(`Success! Invitation has been accepted.`);
+    user.friends = updatedList;
+    user.save();
+
+    return res.status(200).send("Success! Your friends list has been updated.");
   } catch (e) {
     console.log(e.message);
 
-    return res
-      .status(500)
-      .send("Internal server error. Cannot add to a friends list.");
+    return res.status(500).send("Internal server error. Cannot delete friend.");
   }
 });
 
