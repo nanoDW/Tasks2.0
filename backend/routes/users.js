@@ -100,14 +100,16 @@ router.get("/user/:id", auth, async (req, res) => {
 
     res.json({ user });
   } catch (e) {
-    res.status(500).send("Internal server error. Cannot get user data.");
+    console.log(e.message);
+
+    return res.status(500).send("Internal server error. Cannot get user data.");
   }
 });
 
 router.get("/me", auth, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
   if (!user) return res.status(404).send("User of given id does not exist.");
-  res.json({ user });
+  return res.json({ user });
 });
 
 router.put("/addNote", auth, async (req, res) => {
@@ -124,7 +126,7 @@ router.put("/addNote", auth, async (req, res) => {
       return res.status(404).send("User of given id does not exist.");
     }
 
-    res.json({ user });
+    return res.json({ user });
   } catch (e) {
     console.log(e.message);
 
@@ -169,6 +171,12 @@ router.put("/setting", auth, async (req, res) => {
 
 router.put("/hidding", auth, async (req, res) => {
   try {
+    const user = await User.findById(req.user._id);
+
+    user.hidden = !user.hidden;
+    user.save();
+
+    return res.status(200).json(user.hidden);
   } catch (e) {
     console.log(e.message);
 
@@ -189,11 +197,72 @@ router.put("/addFriend", auth, async (req, res) => {
         .send("Error! An invitation has been sent earlier.");
     }
 
-    await Promise.all([addFriend(user, friend), addFriend(friend, user)]);
+    await Promise.all([
+      addFriend(user, friend, true),
+      addFriend(friend, user, false)
+    ]);
 
     return res
       .status(200)
       .send(`Success! Added ${friend.nick} to your friends list.`);
+  } catch (e) {
+    console.log(e.message);
+
+    return res
+      .status(500)
+      .send("Internal server error. Cannot add to a friends list.");
+  }
+});
+
+router.put("/acceptFriend", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    for (let i = 0; i < user.friends.length; i++) {
+      const friend = user.friends[i];
+      if (friend.userID === req.body._id) {
+        if (friend.accepted === true) {
+          return res
+            .status(400)
+            .send("Cannot accept an invitation. It has been already accepted.");
+        }
+      } else {
+        friend.accepted = true;
+      }
+    }
+
+    await user.save();
+
+    return res.status(200).send(`Success! Invitation has been accepted.`);
+  } catch (e) {
+    console.log(e.message);
+
+    return res
+      .status(500)
+      .send("Internal server error. Cannot add to a friends list.");
+  }
+});
+
+router.put("/acceptFriend", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    for (let i = 0; i < user.friends.length; i++) {
+      const friend = user.friends[i];
+      if (friend.userID === req.body._id) {
+        if (friend.accepted === true) {
+          return res
+            .status(400)
+            .send("Cannot accept an invitation. It has been already accepted.");
+        }
+      } else {
+        friend.accepted = true;
+      }
+    }
+
+    await user.save();
+
+    return res.status(200).send(`Success! Invitation has been accepted.`);
   } catch (e) {
     console.log(e.message);
 
