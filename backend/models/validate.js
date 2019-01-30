@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const validateTodo = todo => {
+const validateTask = task => {
   const schema = {
     author: Joi.string()
       .min(3)
@@ -25,7 +25,7 @@ const validateTodo = todo => {
       .max(30),
     done: Joi.boolean().required()
   };
-  return Joi.validate(todo, schema);
+  return Joi.validate(task, schema);
 };
 
 const validateUser = user => {
@@ -86,7 +86,7 @@ const validateLogAndPass = data => {
 };
 
 module.exports = {
-  validateTodo,
+  validateTask,
   validateUser,
   validatePasswordAndEmail,
   validateLogAndPass

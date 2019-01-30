@@ -1,6 +1,6 @@
 const { model, Schema } = require("mongoose");
 
-const todoSchema = new Schema(
+const taskSchema = new Schema(
   {
     author: {
       type: String,
@@ -32,7 +32,7 @@ const todoSchema = new Schema(
       type: Boolean,
       default: false
     },
-    notes: {
+    rejectionContent: {
       type: String,
       default: null,
       minlength: 1,
@@ -138,8 +138,7 @@ const messageSchema = new Schema(
 );
 
 module.exports = {
-  Todo: model("Todo", todoSchema),
+  Task: model("Todo", taskSchema),
   User: model("User", userSchema),
-  Message: model("Message", messageSchema),
-  Friendship: model("Friends", friendshipSchema)
+  Message: model("Message", messageSchema)
 };

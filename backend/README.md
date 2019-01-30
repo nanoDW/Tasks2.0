@@ -360,3 +360,11 @@ example of response:
 ```js
 Success! Your friends list has been updated.
 ```
+
+deleting an account
+DELETE /users/me
+example of response:
+
+```js
+Account succesfully deleted.
+```

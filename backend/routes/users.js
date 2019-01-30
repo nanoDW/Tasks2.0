@@ -271,6 +271,18 @@ router.delete("/friends/:id", auth, async (req, res) => {
   }
 });
 
-router.delete("/");
+router.delete("/me", auth, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+
+    return res.status(200).send("Account succesfully deleted.");
+  } catch (e) {
+    console.log(e.message);
+
+    return res
+      .status(500)
+      .send("Internal server error. Cannot delete your account.");
+  }
+});
 
 module.exports = router;
