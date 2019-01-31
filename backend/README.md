@@ -92,7 +92,7 @@ GET /users/
 }
 ```
 
-get list of all users - ADMIN function
+get list of all users - MOD function
 GET /users/hidden
 example of response:
 
@@ -367,4 +367,16 @@ example of response:
 
 ```js
 Account succesfully deleted.
+```
+
+changing user permissions ADMIN ONLY
+PUT /user/:id/changeRole
+
+```js
+{
+    "nick": "nano12",
+    "_id": "5c4f269ce7fe4c32d8a57cf4",
+    "last": 0,
+    "role": "mod"
+}
 ```

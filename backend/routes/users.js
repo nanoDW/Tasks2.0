@@ -7,6 +7,8 @@ const {
   validatePasswordAndEmail
 } = require("../models/validate");
 const auth = require("../middleware/auth");
+const authMod = require("../middleware/authMod");
+const authAdmin = require("../middleware/authAdmin");
 const addFriend = require("../utils/addFriend");
 const express = require("express");
 
@@ -75,7 +77,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.get("/hidden", auth, async (req, res) => {
+router.get("/hidden", authMod, async (req, res) => {
   try {
     const users = await User.find().select("-password");
 
@@ -104,6 +106,37 @@ router.get("/user/:id", auth, async (req, res) => {
     console.log(e.message);
 
     return res.status(500).send("Internal server error. Cannot get user data.");
+  }
+});
+
+router.put("/user/:id/changeRole", authAdmin, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) {
+      return res.status(404).send("User of given id does not exist.");
+    }
+
+    user.role = user.role === "user" ? "mod" : "user";
+    user.save();
+
+    const updatedUser = {
+      nick: user.nick,
+      _id: user._id,
+      last: user.last,
+      role: user.role
+    };
+
+    res.json({ updatedUser });
+  } catch (e) {
+    console.log(e.message);
+
+    return res
+      .status(500)
+      .send("Internal server error. Cannot update user status.");
   }
 });
 
