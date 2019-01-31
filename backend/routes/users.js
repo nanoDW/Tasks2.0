@@ -44,13 +44,17 @@ router.post("/", async (req, res) => {
     const token = jwt.sign(
       {
         _id: user._id,
-        nick: user.nick
+        nick: user.nick,
+        role: user.role
       },
       config.get("jwtPrivateKey")
     );
 
     const { nick, hidden, _id, email } = user;
-    return res.header("xAuthToken", token).json({ nick, hidden, _id, email });
+    return res
+      .status(200)
+      .header("xAuthToken", token)
+      .json({ nick, hidden, _id, email });
   } catch (e) {
     return res
       .status(500)
@@ -69,7 +73,7 @@ router.get("/", auth, async (req, res) => {
       }
     });
 
-    res.json({ data });
+    res.status(200).json({ data });
   } catch (e) {
     console.log(e.message);
 
@@ -81,7 +85,7 @@ router.get("/hidden", authMod, async (req, res) => {
   try {
     const users = await User.find().select("-password");
 
-    return res.json({ users });
+    return res.status(200).json({ users });
   } catch (e) {
     console.log(e.message);
 
@@ -101,7 +105,7 @@ router.get("/user/:id", auth, async (req, res) => {
     }
 
     const { nick, _id, last, accountCreated } = user;
-    res.json({ nick, _id, last, accountCreated });
+    res.status(200).json({ nick, _id, last, accountCreated });
   } catch (e) {
     console.log(e.message);
 
@@ -130,7 +134,7 @@ router.put("/user/:id/changeRole", authAdmin, async (req, res) => {
       role: user.role
     };
 
-    res.json({ updatedUser });
+    res.status(200).json({ updatedUser });
   } catch (e) {
     console.log(e.message);
 
@@ -161,7 +165,7 @@ router.put("/addNote", auth, async (req, res) => {
     }
 
     const { last } = user;
-    return res.json({ last });
+    return res.status(200).json({ last });
   } catch (e) {
     console.log(e.message);
 
@@ -181,9 +185,12 @@ router.put("/settings", auth, async (req, res) => {
     }
 
     if (req.body.password) {
-      await User.findByIdAndUpdate(req.user._id, {
-        password: req.body.password
-      });
+      const user = await User.findById(req.user._id);
+
+      const salt = await bcrypt.genSalt();
+      user.password = await bcrypt.hash(user.password, salt);
+
+      user.save();
       message = "Password has been updated.";
     }
 

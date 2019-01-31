@@ -22,8 +22,7 @@ const validateTask = task => {
       .required(),
     deadline: Joi.string()
       .min(10)
-      .max(30),
-    done: Joi.boolean().required()
+      .max(30)
   };
   return Joi.validate(task, schema);
 };

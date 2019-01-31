@@ -4,7 +4,8 @@ const taskSchema = new Schema(
   {
     author: {
       type: String,
-      required: true
+      minlength: 3,
+      maxlength: 30
     },
     user: {
       type: String,
@@ -22,19 +23,23 @@ const taskSchema = new Schema(
       required: true
     },
     deadline: {
-      type: Date
+      type: Date,
+      default: null
+    },
+    created: {
+      type: Date,
+      default: Date.now()
     },
     accepted: {
-      type: Boolean,
-      default: false
+      type: Boolean
     },
     done: {
       type: Boolean,
       default: false
     },
-    rejectionContent: {
+    note: {
       type: String,
-      default: null,
+      default: "",
       minlength: 1,
       maxlength: 480
     }

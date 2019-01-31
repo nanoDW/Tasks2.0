@@ -15,12 +15,6 @@
   "author": "nanoDW",
   "license": "ISC",
   "dependencies": {
-    "@types/bcryptjs": "^2.4.2",
-    "@types/config": "0.0.34",
-    "@types/express": "^4.16.1",
-    "@types/joi": "^14.3.0",
-    "@types/jsonwebtoken": "^8.3.0",
-    "@types/mongoose": "^5.3.10",
     "bcryptjs": "^2.4.3",
     "config": "^3.0.1",
     "joi": "^14.3.1",
