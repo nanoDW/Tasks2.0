@@ -5,7 +5,6 @@ const validateTask = task => {
     author: Joi.string()
       .min(3)
       .max(25)
-      .required()
       .trim(),
     user: Joi.string()
       .min(3)
