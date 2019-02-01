@@ -2,6 +2,7 @@ const express = require("express");
 const { Task } = require("../models/schemas");
 const { validateTask } = require("../models/validate");
 const auth = require("../middleware/auth");
+const authAdmin = require("../middleware/authAdmin");
 
 const router = express.Router();
 
@@ -43,7 +44,23 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+router.get("/", authAdmin, async (req, res) => {
+  try {
+    const tasks = await Task.find();
+
+    return res.sendStatus(200).json({ tasks });
+  } catch (e) {
+    console.log(e.message);
+
+    return res.status(500).send("Internal server error. Cannot get tasks");
+  }
+});
+
 router.put("/editTask/:id", auth, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
   const { priority, deadline } = req.body;
 
   try {
@@ -63,6 +80,10 @@ router.put("/editTask/:id", auth, async (req, res) => {
 });
 
 router.put("/complete/:id", auth, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
   try {
     const task = await Task.findById(req.params.id);
 
@@ -84,6 +105,10 @@ router.put("/complete/:id", auth, async (req, res) => {
 });
 
 router.delete("/delete/:id", auth, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
   try {
     const task = await Task.findById(req.params.id);
 
@@ -102,6 +127,10 @@ router.delete("/delete/:id", auth, async (req, res) => {
 });
 
 router.post("/user/:id", auth, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
   const { body } = req;
   const { error } = validateTask(body);
 
@@ -129,6 +158,10 @@ router.post("/user/:id", auth, async (req, res) => {
 });
 
 router.put("/accept/:id", auth, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
   try {
     const task = await Task.findById(req.params.id);
 
@@ -148,6 +181,10 @@ router.put("/accept/:id", auth, async (req, res) => {
 });
 
 router.put("/reject/:id", auth, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
   if (req.body.note.lenght < 3) {
     return res
       .status(400)
@@ -169,6 +206,30 @@ router.put("/reject/:id", auth, async (req, res) => {
     console.log(e.message);
 
     return res.status(500).send("Internal server error. Cannot reject task");
+  }
+});
+
+router.delete("/user/:id", auth, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
+  try {
+    const task = await findById(req.params.id);
+
+    if (task.author !== req.user.nick) {
+      return res.status(403).send("Access denied. Cannot delete task");
+    }
+
+    await findByIdAndDelete(req.params.id);
+
+    return res.status(200).send("Deleted task. Add new task to your list");
+  } catch (e) {
+    console.log(e.message);
+
+    return res
+      .status(500)
+      .send("Internal server error. Cannot accept rejection");
   }
 });
 

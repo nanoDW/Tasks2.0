@@ -286,6 +286,10 @@ router.put("/acceptFriend", auth, async (req, res) => {
 });
 
 router.delete("/friends/:id", auth, async (req, res) => {
+  if (req.params.id.length !== 24) {
+    return res.status(400).send("Invalid user ID.");
+  }
+
   try {
     const user = await User.findById(req.user._id);
 
