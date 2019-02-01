@@ -116,9 +116,25 @@ const messageSchema = new Schema(
       type: String,
       required: true
     },
+    authorID: {
+      type: String,
+      required: true
+    },
     adressedTo: {
       type: String,
       required: true
+    },
+    userID: {
+      type: String,
+      required: true
+    },
+    deletedByAuthor: {
+      type: Boolean,
+      default: false
+    },
+    deletedByUser: {
+      type: Boolean,
+      default: false
     },
     topic: {
       type: String,

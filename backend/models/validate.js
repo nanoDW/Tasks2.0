@@ -83,9 +83,24 @@ const validateLogAndPass = data => {
   return Joi.validate(data, schema);
 };
 
+const validateMessage = data => {
+  const schema = {
+    topic: Joi.string()
+      .min(1)
+      .max(48)
+      .required(),
+    text: Joi.string()
+      .min(1)
+      .max(480)
+      .required()
+  };
+  return Joi.validate(data, schema);
+};
+
 module.exports = {
   validateTask,
   validateUser,
   validatePasswordAndEmail,
-  validateLogAndPass
+  validateLogAndPass,
+  validateMessage
 };

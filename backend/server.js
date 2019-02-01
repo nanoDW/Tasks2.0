@@ -3,6 +3,7 @@ const config = require("config");
 const mongoose = require("mongoose");
 const users = require("./routes/users");
 const tasks = require("./routes/tasks");
+const messages = require("./routes/messages");
 const error = require("./middleware/error");
 const auth = require("./routes/auth");
 
@@ -43,6 +44,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", auth);
 app.use("/api/users", users);
 app.use("/api/tasks", tasks);
+app.use("/api/messages", messages);
 app.use(error);
 app.get("*", function(req, res) {
   res.status(404).send("Error 404. Not found");

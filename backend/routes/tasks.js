@@ -2,7 +2,7 @@ const express = require("express");
 const { Task } = require("../models/schemas");
 const { validateTask } = require("../models/validate");
 const auth = require("../middleware/auth");
-const authAdmin = require("../middleware/authAdmin");
+const authMod = require("../middleware/authMod");
 
 const router = express.Router();
 
@@ -44,7 +44,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.get("/", authAdmin, async (req, res) => {
+router.get("/", authMod, async (req, res) => {
   try {
     const tasks = await Task.find();
 
@@ -58,7 +58,7 @@ router.get("/", authAdmin, async (req, res) => {
 
 router.put("/editTask/:id", auth, async (req, res) => {
   if (req.params.id.length !== 24) {
-    return res.status(400).send("Invalid user ID.");
+    return res.status(400).send("Invalid task ID.");
   }
 
   const { priority, deadline } = req.body;
@@ -69,7 +69,7 @@ router.put("/editTask/:id", auth, async (req, res) => {
     task.priority = priority ? priority : task.priority;
     task.deadline = deadline ? deadline : task.deadline;
 
-    task.save();
+    await task.save();
 
     return res.status(200).json({ task });
   } catch (e) {
@@ -81,7 +81,7 @@ router.put("/editTask/:id", auth, async (req, res) => {
 
 router.put("/complete/:id", auth, async (req, res) => {
   if (req.params.id.length !== 24) {
-    return res.status(400).send("Invalid user ID.");
+    return res.status(400).send("Invalid task ID.");
   }
 
   try {
@@ -94,7 +94,7 @@ router.put("/complete/:id", auth, async (req, res) => {
     task.done = true;
     task.note = req.body.note;
     task.deadline = Date.now();
-    task.save();
+    await task.save();
 
     return res.status(200).json({ task });
   } catch (e) {
@@ -106,7 +106,7 @@ router.put("/complete/:id", auth, async (req, res) => {
 
 router.delete("/delete/:id", auth, async (req, res) => {
   if (req.params.id.length !== 24) {
-    return res.status(400).send("Invalid user ID.");
+    return res.status(400).send("Invalid task ID.");
   }
 
   try {
@@ -128,7 +128,7 @@ router.delete("/delete/:id", auth, async (req, res) => {
 
 router.post("/user/:id", auth, async (req, res) => {
   if (req.params.id.length !== 24) {
-    return res.status(400).send("Invalid user ID.");
+    return res.status(400).send("Invalid task ID.");
   }
 
   const { body } = req;
@@ -159,7 +159,7 @@ router.post("/user/:id", auth, async (req, res) => {
 
 router.put("/accept/:id", auth, async (req, res) => {
   if (req.params.id.length !== 24) {
-    return res.status(400).send("Invalid user ID.");
+    return res.status(400).send("Invalid task ID.");
   }
 
   try {
@@ -182,7 +182,7 @@ router.put("/accept/:id", auth, async (req, res) => {
 
 router.put("/reject/:id", auth, async (req, res) => {
   if (req.params.id.length !== 24) {
-    return res.status(400).send("Invalid user ID.");
+    return res.status(400).send("Invalid task ID.");
   }
 
   if (req.body.note.lenght < 3) {
@@ -211,7 +211,7 @@ router.put("/reject/:id", auth, async (req, res) => {
 
 router.delete("/user/:id", auth, async (req, res) => {
   if (req.params.id.length !== 24) {
-    return res.status(400).send("Invalid user ID.");
+    return res.status(400).send("Invalid task ID.");
   }
 
   try {
