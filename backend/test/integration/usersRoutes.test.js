@@ -16,7 +16,7 @@ describe("all users routes", () => {
   describe("POST /api/users", () => {
     it("should add user to the db", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "strong_password",
@@ -30,14 +30,23 @@ describe("all users routes", () => {
   describe("POST /api/users", () => {
     it("should add user to the db and get it", async () => {
       await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "strong_password",
           email: "person1@gmail.com"
         })
         .set("Accept", "application/json");
-      const res = await request(server).get("/api/users/hidden");
+      const user = await request(server)
+        .post("/api/auth")
+        .send({
+          nick: "person1",
+          password: "strong_password"
+        });
+
+      const res = await request(server)
+        .get("/api/users/hidden")
+        .set("xAuthToken", user.header("xAuthToken"));
       expect(res.status).toBe(200);
       expect(res.body.users[0]).toHaveProperty("nick");
     });
@@ -46,7 +55,7 @@ describe("all users routes", () => {
   describe("POST /api/users", () => {
     it("should throw validation error: nick is required", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "",
           password: "strong_password",
@@ -59,10 +68,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: nick length is too short", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "1",
           password: "strong_password",
@@ -75,10 +84,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: nick length is too long", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1person1person1person1",
           password: "strong_password",
@@ -93,10 +102,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: password is required", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "",
@@ -109,10 +118,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: password is too short", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "p",
@@ -127,10 +136,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: password is too long", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "veryverystrongpasswordorverylongidontcare",
@@ -145,10 +154,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: email is required", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "strong_password",
@@ -161,10 +170,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: too short email", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "strong_password",
@@ -179,10 +188,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: not valid email", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "strong_password",
@@ -195,10 +204,10 @@ describe("all users routes", () => {
     });
   });
 
-  describe("POST /api/users", () => {
+  describe("POST /api/users/", () => {
     it("should throw validation error: not valid email", async () => {
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "strong_password",
@@ -214,7 +223,7 @@ describe("all users routes", () => {
   describe("POST /api/users", () => {
     it("should throw 404 error", async () => {
       await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "strong_password",
@@ -223,7 +232,7 @@ describe("all users routes", () => {
         .set("Accept", "application/json");
 
       const res = await request(server)
-        .post("/api/users")
+        .post("/api/users/")
         .send({
           nick: "person1",
           password: "strong_password",
@@ -288,7 +297,7 @@ describe("all users routes", () => {
           hidden: false
         }
       ]);
-      const { header } = await request(server)
+      await request(server)
         .post("/api/users")
         .send({
           nick: "person1",
@@ -296,10 +305,20 @@ describe("all users routes", () => {
           email: "person1@gmail.com"
         })
         .set("Accept", "application/json");
-      console.log(JSON.parse(header));
+
+      const { header } = await request(server)
+        .post("/api/auth")
+        .send({
+          nick: "person1",
+          password: "strong_password"
+        })
+        .set("Accept", "application/json");
+
+      console.log(header);
       const res = await request(server)
-        .get("/api/users")
-        .set("xAuthToken", header("xAuthToken"));
+        .get("/api/users/")
+        .set("access-control-expose-headers", "xAuthToken")
+        .set("Accept", "application/json");
 
       expect(res.status).toBe(200);
       expect(res.body.data.length).toBe(4);
@@ -363,7 +382,25 @@ describe("all users routes", () => {
           hidden: false
         }
       ]);
-      const res = await request(server).get("/api/users/hidden");
+
+      const signup = await request(server)
+        .post("/api/users/")
+        .send({
+          nick: "person1",
+          password: "strong_password",
+          email: "person1@gmail.com"
+        });
+
+      const signin = await request(server)
+        .post("/api/users/")
+        .send({
+          nick: "person1",
+          password: "strong_password"
+        });
+
+      const res = await request(server)
+        .get("/api/users/hidden")
+        .header(signin.headers);
       expect(res.status).toBe(200);
       expect(res.body.users.length).toBe(8);
       res.body.users.map(user => {
