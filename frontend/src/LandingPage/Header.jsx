@@ -3,7 +3,7 @@ import styled from "styled-components";
 import notes from "../img/notes.jpg";
 
 const MainHeader = styled.header`
-  height: 40vh;
+  height: 50vh;
   background: url(${notes}) no-repeat fixed bottom;
   background-size: cover;
   display: flex;

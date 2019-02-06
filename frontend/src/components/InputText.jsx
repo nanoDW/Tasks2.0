@@ -9,28 +9,33 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
+  margin: 3px;
   width: 70vw;
   height: 30px;
-  border: 2px solid black;
-  margin: 10px;
+  border: 0 solid white;
+  border-radius: 3px;
   text-align: center;
 
-  &::before {
-    content: "";
-    top: 0;
-    left: 0;
-    width: calc(70vw + 4px);
-    height: 34px;
-    background: linear-gradient(red, blue);
-    border: green;
+  &:focus {
+    outline: none;
   }
+`;
+
+const Frame = styled.div`
+  margin: 10px;
+  width: calc(70vw + 6px);
+  height: 36px;
+  background: linear-gradient(to right, #54dfa6, #9e54df);
+  border-radius: 5px;
 `;
 
 export const InputText = ({ name, labelContent, id }) => {
   return (
     <>
       <Label htmlFor={name}>{labelContent}</Label>
-      <Input type="text" name={name} id={id} />
+      <Frame>
+        <Input type="text" name={name} id={id} />
+      </Frame>
     </>
   );
 };
