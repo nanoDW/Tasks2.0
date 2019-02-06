@@ -1,6 +1,8 @@
 import React from "react";
 import SignIn from "./SignIn";
 import Register from "./Register";
+import Header from "./Header";
+import Assumptions from "./Assumptions";
 
 export default class LandingPage extends React.Component {
   state = {
@@ -14,9 +16,9 @@ export default class LandingPage extends React.Component {
   render() {
     return (
       <div>
-        <header>Motto</header>
+        <Header />
         {this.setView()}
-        <section>What is nice</section>
+        <Assumptions />
       </div>
     );
   }

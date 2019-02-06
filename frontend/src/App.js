@@ -1,8 +1,19 @@
 import React from "react";
-//import "./App.css";
+import { createGlobalStyle } from "styled-components";
 import UserPanel from "./UserPanel/UserPanel";
 import LandingPage from "./LandingPage/LandingPage";
 import Footer from "./Footer";
+
+const GlobalStyle = createGlobalStyle`
+body, html, #root {
+  margin: 0;
+  padding: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+`;
 
 export default class App extends React.Component {
   state = {
@@ -16,10 +27,11 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
+        <GlobalStyle />
         {this.renderView()}
         <Footer />
-      </div>
+      </>
     );
   }
 }
