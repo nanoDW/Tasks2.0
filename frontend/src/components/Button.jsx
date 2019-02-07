@@ -2,16 +2,19 @@ import React from "react";
 import styled from "styled-components";
 
 const LandingButton = styled.button`
-  width: 40%;
+  width: 45%;
   height: 32px;
-  font-size: 16px;
+  font-size: 14px;
   padding: 3px;
-  background-color: white;
-  border: 3px solid #7999c3;
-  border-radius: 3px;
+  background-color: #eafffc;
+  border: 3px solid #54dfa6;
+  border-radius: 8px;
+  margin: 15px 5px;
 
-  &:active {
+  &:focus {
     outline: none;
+    border: 3px solid #54dfa6;
+    background-color: white;
   }
 `;
 

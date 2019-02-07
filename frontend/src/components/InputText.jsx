@@ -5,7 +5,8 @@ const Label = styled.label`
   width: 70vw;
   height: 20px;
   text-align: center;
-  font-size: 20px;
+  font-size: 16px;
+  margin: 10px auto 0;
 `;
 
 const Input = styled.input`
@@ -13,11 +14,13 @@ const Input = styled.input`
   width: 70vw;
   height: 30px;
   border: 0 solid white;
-  border-radius: 3px;
+  border-radius: 5px;
   text-align: center;
+  background-color: #eafffc;
 
   &:focus {
     outline: none;
+    background-color: #fff;
   }
 `;
 
@@ -26,7 +29,7 @@ const Frame = styled.div`
   width: calc(70vw + 6px);
   height: 36px;
   background: linear-gradient(to right, #54dfa6, #9e54df);
-  border-radius: 5px;
+  border-radius: 8px;
 `;
 
 export const InputText = ({
