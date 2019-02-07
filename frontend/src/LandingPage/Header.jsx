@@ -8,17 +8,20 @@ const MainHeader = styled.header`
   background-size: cover;
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
 `;
 
 const H1 = styled.h1`
   margin: calc((40vh - 200px) / 2) auto;
   padding: 10px;
   background-color: white;
+  border-radius: 10px;
   border: 2px solid black;
   width: 200px;
   font-family: "Kalam", cursive;
   font-size: 28px;
   text-align: center;
+  font-weight: normal;
 `;
 
 export default function Header() {
