@@ -29,12 +29,18 @@ const Frame = styled.div`
   border-radius: 5px;
 `;
 
-export const InputText = ({ name, labelContent, id }) => {
+export const InputText = ({
+  name,
+  labelContent,
+  id,
+  type,
+  onChangeDetection
+}) => {
   return (
     <>
       <Label htmlFor={name}>{labelContent}</Label>
       <Frame>
-        <Input type="text" name={name} id={id} />
+        <Input type={type} name={name} id={id} onChange={onChangeDetection} />
       </Frame>
     </>
   );
