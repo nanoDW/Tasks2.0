@@ -11,44 +11,42 @@ const Form = styled.form`
   flex-wrap: wrap;
   justify-content: center;
   padding: 10px;
-  font-family: "PT Sans";
+  font-family: "Duru Sans", sans-serif;
 `;
 
 export default class SignIn extends React.Component {
-  state = {
-    login: "",
-    password: ""
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      login: "",
+      password: "",
+      error: ""
+    };
+  }
 
   handleLoginChange = e => {
     this.setState({ login: e.target.value });
-    console.log(this.state.login);
   };
 
   handlePasswordChange = e => {
     this.setState({ password: e.target.value });
-    console.log(this.state.password);
   };
 
   handleSubmit = async e => {
     e.preventDefault();
 
     const data = {
-      nick: "nanoDW",
+      nick: this.state.login,
       password: this.state.password
     };
 
     try {
-      JSON.stringify(data);
-
-      const userData = await axios.post(
-        "http://localhost:4500/api/auth/",
-        data
-      );
-      console.log(userData, 67);
+      const res = await axios.post("http://localhost:4500/api/auth/", data);
+      console.log(res);
     } catch (e) {
-      console.log(e.message, 1);
-      this.setState({ login: "", password: "" });
+      console.log(e);
+      this.setState({ error: e.message });
     }
   };
 
@@ -72,6 +70,8 @@ export default class SignIn extends React.Component {
           id="2"
         />
         <Button type="submit" text="Sign in" />
+        <Button type="button" text="Sign up" onClick={this.props.onRegister} />
+        <p>{this.state.error}</p>
       </Form>
     );
   }
