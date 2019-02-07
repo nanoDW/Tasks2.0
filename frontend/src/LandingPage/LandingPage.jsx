@@ -10,7 +10,15 @@ export default class LandingPage extends React.Component {
   };
 
   setView = () => {
-    return this.state.hasAccount ? <SignIn /> : <Register />;
+    return this.state.hasAccount ? (
+      <SignIn onRegister={this.changeView} />
+    ) : (
+      <Register />
+    );
+  };
+
+  changeView = () => {
+    this.setState({ hasAccount: false });
   };
 
   render() {
