@@ -13,12 +13,16 @@ export default class LandingPage extends React.Component {
     return this.state.hasAccount ? (
       <SignIn onRegister={this.changeView} />
     ) : (
-      <Register />
+      <Register onLogin={this.onSignIn} />
     );
   };
 
   changeView = () => {
     this.setState({ hasAccount: false });
+  };
+
+  onSignIn = () => {
+    this.setState({ hasAccount: true });
   };
 
   render() {

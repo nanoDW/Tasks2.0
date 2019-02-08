@@ -48,6 +48,8 @@ export default class Register extends React.Component {
           email: "",
           error: ""
         });
+
+        this.props.onLogin(this.setState({ hasAccount: true }));
       } else {
         this.setState({ error: "Passwords are different." });
       }
@@ -101,6 +103,7 @@ export default class Register extends React.Component {
         />
 
         <Button type="submit" text="Register" />
+
         <p>{this.state.error}</p>
       </Form>
     );

@@ -66,8 +66,7 @@ export default class SignIn extends React.Component {
             onChangeDetection={this.handleChange}
             labelContent="Enter your password"
           />
-          <Link
-            to="/login"
+          <div
             style={{
               display: "flex",
               width: "50%",
@@ -75,7 +74,7 @@ export default class SignIn extends React.Component {
             }}
           >
             <Button type="submit" text="Sign in" />
-          </Link>
+          </div>
           <Link
             to="/register"
             style={{
