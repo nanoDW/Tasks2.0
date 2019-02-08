@@ -18,6 +18,14 @@ const LandingButton = styled.button`
   }
 `;
 
-export const Button = ({ text }) => {
-  return <LandingButton>{text}</LandingButton>;
+export const Button = ({ type, text, onClick }) => {
+  if (onClick) {
+    return (
+      <LandingButton type={type} onClick={onClick}>
+        {text}
+      </LandingButton>
+    );
+  } else {
+    return <LandingButton type={type}>{text}</LandingButton>;
+  }
 };
