@@ -18,6 +18,7 @@ export default class Register extends React.Component {
   state = {
     login: "",
     password: "",
+    repeatPassword: "",
     email: "",
     error: ""
   };
@@ -36,11 +37,30 @@ export default class Register extends React.Component {
     };
 
     try {
-      const res = await axios.post("http://localhost:4500/api/users/", data);
-      console.log(res);
+      if (this.state.repeatPassword === this.state.password) {
+        const res = await axios.post("http://localhost:4500/api/users/", data);
+
+        console.log(res);
+        this.setState({
+          login: "",
+          password: "",
+          repeatPassword: "",
+          email: "",
+          error: ""
+        });
+      } else {
+        this.setState({ error: "Passwords are different." });
+      }
     } catch (e) {
-      console.log(e.body);
+      console.log(e.response);
+
       this.setState({ error: e.message });
+      this.setState({
+        login: "",
+        password: "",
+        repeatPassword: "",
+        email: ""
+      });
       await console.log(this.state.error);
     }
   };
@@ -54,34 +74,32 @@ export default class Register extends React.Component {
           onChangeDetection={this.handleChange}
           name="login"
           labelContent="Enter your login"
-          id="5"
         />
+
         <InputText
           type="password"
           name="password"
           value={this.state.password}
           onChangeDetection={this.handleChange}
           labelContent="Enter your password"
-          id="6"
         />
 
         <InputText
           type="password"
           name="repeatPassword"
-          value={this.state.password}
+          value={this.state.repeatPassword}
           onChangeDetection={this.handleChange}
           labelContent="Repeat your password"
-          id="7"
         />
 
         <InputText
           type="email"
           name="email"
-          value={this.state.password}
+          value={this.state.email}
           onChangeDetection={this.handleChange}
           labelContent="Enter your email"
-          id="8"
         />
+
         <Button type="submit" text="Register" />
         <p>{this.state.error}</p>
       </Form>

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const LandingButton = styled.button`
-  width: 45%;
+  width: 90%;
   height: 32px;
   font-size: 14px;
   padding: 3px;
