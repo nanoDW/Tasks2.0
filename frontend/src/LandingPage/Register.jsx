@@ -22,16 +22,8 @@ export default class Register extends React.Component {
     error: ""
   };
 
-  handleLoginChange = e => {
-    this.setState({ login: e.target.value });
-  };
-
-  handlePasswordChange = e => {
-    this.setState({ password: e.target.value });
-  };
-
-  handleEmailChange = e => {
-    this.setState({ email: e.target.value });
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   handleSubmit = async e => {
@@ -59,7 +51,7 @@ export default class Register extends React.Component {
         <InputText
           type="text"
           value={this.state.login}
-          onChangeDetection={this.handleLoginChange}
+          onChangeDetection={this.handleChange}
           name="login"
           labelContent="Enter your login"
           id="5"
@@ -68,7 +60,7 @@ export default class Register extends React.Component {
           type="password"
           name="password"
           value={this.state.password}
-          onChangeDetection={this.handlePasswordChange}
+          onChangeDetection={this.handleChange}
           labelContent="Enter your password"
           id="6"
         />
@@ -77,8 +69,8 @@ export default class Register extends React.Component {
           type="password"
           name="repeatPassword"
           value={this.state.password}
-          onChangeDetection={this.handlePasswordChange}
-          labelContent="Verify your password"
+          onChangeDetection={this.handleChange}
+          labelContent="Repeat your password"
           id="7"
         />
 
@@ -86,7 +78,7 @@ export default class Register extends React.Component {
           type="email"
           name="email"
           value={this.state.password}
-          onChangeDetection={this.handleEmailChange}
+          onChangeDetection={this.handleChange}
           labelContent="Enter your email"
           id="8"
         />

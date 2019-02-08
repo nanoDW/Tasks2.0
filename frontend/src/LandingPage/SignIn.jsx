@@ -21,12 +21,8 @@ export default class SignIn extends React.Component {
     error: ""
   };
 
-  handleLoginChange = e => {
-    this.setState({ login: e.target.value });
-  };
-
-  handlePasswordChange = e => {
-    this.setState({ password: e.target.value });
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   handleSubmit = async e => {
@@ -57,7 +53,7 @@ export default class SignIn extends React.Component {
         <InputText
           type="text"
           value={this.state.login}
-          onChangeDetection={this.handleLoginChange}
+          onChangeDetection={this.handleChange}
           name="login"
           labelContent="Enter your login"
         />
@@ -65,7 +61,7 @@ export default class SignIn extends React.Component {
           type="password"
           name="password"
           value={this.state.password}
-          onChangeDetection={this.handlePasswordChange}
+          onChangeDetection={this.handleChange}
           labelContent="Enter your password"
         />
         <Button type="submit" text="Sign in" />
