@@ -9,7 +9,7 @@ const LandingButton = styled.button`
   background-color: #eafffc;
   border: 3px solid #54dfa6;
   border-radius: 8px;
-  margin: 15px 5px 0;
+  margin: 10px 5px 10px;
 
   &:focus {
     outline: none;

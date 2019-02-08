@@ -8,7 +8,7 @@ const MainHeader = styled.header`
   background-size: cover;
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
 `;
 
 const H1 = styled.h1`
