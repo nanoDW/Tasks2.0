@@ -13,6 +13,13 @@ const Form = styled.form`
   justify-content: center;
   padding: 10px;
   font-family: "Duru Sans", sans-serif;
+  height: 50vh;
+`;
+
+const ErrorMessage = styled.p`
+  font-size: 14px;
+  margin: 0;
+  text-align: center;
 `;
 
 export default class SignIn extends React.Component {
@@ -34,14 +41,33 @@ export default class SignIn extends React.Component {
       password: this.state.password
     };
 
+    const validation = this.validate(data);
     try {
-      const res = await axios.post("http://localhost:4500/api/auth/", data);
-      console.log(res);
+      if (validation.result) {
+        const res = await axios.post("http://localhost:4500/api/auth/", data);
+        console.log(res);
+      } else {
+        this.setState({ error: validation.message });
+      }
     } catch (e) {
       console.log(e);
       this.setState({ error: e.message });
     }
   };
+
+  validate(data) {
+    const { nick, password } = data;
+
+    if (nick.length < 3 || nick.length > 20) {
+      return { result: false, message: "Login should have 3-15 characters." };
+    }
+    if (password.length < 8 || password.length > 25) {
+      return {
+        result: false,
+        message: "Password should have 8-20 characters."
+      };
+    } else return { result: true, message: "" };
+  }
 
   changeView = e => {
     e.preventDefault();
@@ -66,6 +92,7 @@ export default class SignIn extends React.Component {
             onChangeDetection={this.handleChange}
             labelContent="Enter your password"
           />
+          <ErrorMessage>{this.state.error}</ErrorMessage>
           <div
             style={{
               display: "flex",
@@ -89,7 +116,6 @@ export default class SignIn extends React.Component {
               onClick={this.props.onRegister}
             />
           </Link>
-          <p>{this.state.error}</p>
         </Form>
       </Router>
     );

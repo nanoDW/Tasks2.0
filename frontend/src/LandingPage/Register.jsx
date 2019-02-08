@@ -14,6 +14,12 @@ const Form = styled.form`
   font-family: "Duru Sans";
 `;
 
+const ErrorMessage = styled.p`
+  font-size: 14px;
+  margin: 0;
+  text-align: center;
+`;
+
 export default class Register extends React.Component {
   state = {
     login: "",
@@ -36,8 +42,12 @@ export default class Register extends React.Component {
       email: this.state.email
     };
 
+    const validation = this.validate(data);
     try {
-      if (this.state.repeatPassword === this.state.password) {
+      if (
+        validation.result &&
+        this.state.password === this.state.repeatPassword
+      ) {
         const res = await axios.post("http://localhost:4500/api/users/", data);
 
         console.log(res);
@@ -51,7 +61,11 @@ export default class Register extends React.Component {
 
         this.props.onLogin(this.setState({ hasAccount: true }));
       } else {
-        this.setState({ error: "Passwords are different." });
+        if (validation.message) {
+          this.setState({ error: validation.message });
+        } else {
+          this.setState({ error: "Passwords are different." });
+        }
       }
     } catch (e) {
       console.log(e.response);
@@ -66,6 +80,26 @@ export default class Register extends React.Component {
       await console.log(this.state.error);
     }
   };
+
+  validate(data) {
+    const { nick, password, email } = data;
+
+    if (nick.length < 3 || nick.length > 20) {
+      return { result: false, message: "Login should have 3-15 characters." };
+    }
+    if (password.length < 8 || password.length > 25) {
+      return {
+        result: false,
+        message: "Password should have 8-20 characters."
+      };
+    }
+    if (email.length < 8 || email.length > 35) {
+      return {
+        result: false,
+        message: "Invalid email."
+      };
+    } else return { result: true, message: "" };
+  }
 
   render() {
     return (
@@ -101,10 +135,9 @@ export default class Register extends React.Component {
           onChangeDetection={this.handleChange}
           labelContent="Enter your email"
         />
+        <ErrorMessage>{this.state.error}</ErrorMessage>
 
         <Button type="submit" text="Register" />
-
-        <p>{this.state.error}</p>
       </Form>
     );
   }
