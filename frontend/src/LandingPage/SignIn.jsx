@@ -15,15 +15,11 @@ const Form = styled.form`
 `;
 
 export default class SignIn extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      login: "",
-      password: "",
-      error: ""
-    };
-  }
+  state = {
+    login: "",
+    password: "",
+    error: ""
+  };
 
   handleLoginChange = e => {
     this.setState({ login: e.target.value });
@@ -50,6 +46,11 @@ export default class SignIn extends React.Component {
     }
   };
 
+  changeView = e => {
+    e.preventDefault();
+    this.props.onRegister(this.setState({ hasAccount: false }));
+  };
+
   render() {
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -59,7 +60,6 @@ export default class SignIn extends React.Component {
           onChangeDetection={this.handleLoginChange}
           name="login"
           labelContent="Enter your login"
-          id="1"
         />
         <InputText
           type="password"
@@ -67,7 +67,6 @@ export default class SignIn extends React.Component {
           value={this.state.password}
           onChangeDetection={this.handlePasswordChange}
           labelContent="Enter your password"
-          id="2"
         />
         <Button type="submit" text="Sign in" />
         <Button type="button" text="Sign up" onClick={this.props.onRegister} />

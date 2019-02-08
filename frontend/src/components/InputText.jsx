@@ -43,7 +43,7 @@ export const InputText = ({
     <>
       <Label htmlFor={name}>{labelContent}</Label>
       <Frame>
-        <Input type={type} name={name} id={id} onChange={onChangeDetection} />
+        <Input type={type} name={name} onChange={onChangeDetection} />
       </Frame>
     </>
   );
