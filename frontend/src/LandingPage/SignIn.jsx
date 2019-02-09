@@ -24,7 +24,7 @@ const ErrorMessage = styled.p`
 
 export default class SignIn extends React.Component {
   state = {
-    login: "",
+    nick: "",
     password: "",
     error: ""
   };
@@ -37,7 +37,7 @@ export default class SignIn extends React.Component {
     e.preventDefault();
 
     const data = {
-      nick: this.state.login,
+      nick: this.state.nick,
       password: this.state.password
     };
 
@@ -56,12 +56,13 @@ export default class SignIn extends React.Component {
   };
 
   validate(data) {
-    const { nick, password } = data;
+    const nick = data.nick.trim().length;
+    const password = data.password.trim().length;
 
-    if (nick.length < 3 || nick.length > 20) {
+    if (nick < 3 || nick > 15) {
       return { result: false, message: "Login should have 3-15 characters." };
     }
-    if (password.length < 8 || password.length > 25) {
+    if (password < 8 || password > 20) {
       return {
         result: false,
         message: "Password should have 8-20 characters."
@@ -80,9 +81,9 @@ export default class SignIn extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <InputText
             type="text"
-            value={this.state.login}
+            value={this.state.nick}
             onChangeDetection={this.handleChange}
-            name="login"
+            name="nick"
             labelContent="Enter your login"
           />
           <InputText

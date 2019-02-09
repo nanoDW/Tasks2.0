@@ -22,7 +22,7 @@ const ErrorMessage = styled.p`
 
 export default class Register extends React.Component {
   state = {
-    login: "",
+    nick: "",
     password: "",
     repeatPassword: "",
     email: "",
@@ -37,22 +37,20 @@ export default class Register extends React.Component {
     e.preventDefault();
 
     const data = {
-      nick: this.state.login,
+      nick: this.state.nick,
       password: this.state.password,
+      repeatPassword: this.state.repeatPassword,
       email: this.state.email
     };
 
     const validation = this.validate(data);
     try {
-      if (
-        validation.result &&
-        this.state.password === this.state.repeatPassword
-      ) {
+      if (validation.result) {
         const res = await axios.post("http://localhost:4500/api/users/", data);
 
         console.log(res);
         this.setState({
-          login: "",
+          nick: "",
           password: "",
           repeatPassword: "",
           email: "",
@@ -61,18 +59,14 @@ export default class Register extends React.Component {
 
         this.props.onLogin(this.setState({ hasAccount: true }));
       } else {
-        if (validation.message) {
-          this.setState({ error: validation.message });
-        } else {
-          this.setState({ error: "Passwords are different." });
-        }
+        this.setState({ error: validation.message });
       }
     } catch (e) {
       console.log(e.response);
 
       this.setState({ error: e.message });
       this.setState({
-        login: "",
+        nick: "",
         password: "",
         repeatPassword: "",
         email: ""
@@ -82,18 +76,26 @@ export default class Register extends React.Component {
   };
 
   validate(data) {
-    const { nick, password, email } = data;
+    const nick = data.nick.trim().length;
+    const password = data.password.trim().length;
+    const email = data.email.trim().length;
 
-    if (nick.length < 3 || nick.length > 20) {
+    if (nick < 3 || nick > 15) {
       return { result: false, message: "Login should have 3-15 characters." };
     }
-    if (password.length < 8 || password.length > 25) {
+    if (password < 8 || password > 20) {
       return {
         result: false,
         message: "Password should have 8-20 characters."
       };
     }
-    if (email.length < 8 || email.length > 35) {
+    if (data.password !== data.repeatPassword) {
+      return {
+        result: false,
+        message: "Passwords are different."
+      };
+    }
+    if (email < 8 || email > 40) {
       return {
         result: false,
         message: "Invalid email."
@@ -106,9 +108,9 @@ export default class Register extends React.Component {
       <Form onSubmit={this.handleSubmit}>
         <InputText
           type="text"
-          value={this.state.login}
+          value={this.state.nick}
           onChangeDetection={this.handleChange}
-          name="login"
+          name="nick"
           labelContent="Enter your login"
         />
 
