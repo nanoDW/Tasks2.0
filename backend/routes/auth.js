@@ -26,14 +26,15 @@ router.post("/", async (req, res) => {
   const token = jwt.sign(
     {
       _id: existingUser._id,
-      nick: existingUser.nick
+      nick: existingUser.nick,
+      role: existingUser.role
     },
     config.get("jwtPrivateKey")
   );
 
   return res
     .header("xAuthToken", token)
-    .send(_.pick(existingUser, ["_id", "nick", "email"]));
+    .send(_.pick(existingUser, ["_id", "nick", "email", "role"]));
 });
 
 module.exports = router;
