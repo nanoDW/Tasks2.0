@@ -49,11 +49,7 @@ export default class SignIn extends React.Component {
       if (validation.result) {
         const res = await axios.post("http://localhost:4500/api/auth/", data);
         console.log(res);
-        this.props.context.authUser({
-          nick: this.state.nick,
-          token: res.headers.xAuthToken,
-          role: res.body.role
-        });
+        this.setState({ role: res.body.role, token: res.headers.xAuthToken });
       } else {
         this.setState({ error: validation.message });
       }
@@ -88,8 +84,14 @@ export default class SignIn extends React.Component {
       <Router>
         <LoggedUser.Consumer>
           {context => {
+            console.log(context);
+            // context.authUser(
+            //   this.state.nick,
+            //   this.state.role,
+            //   this.state.token
+            // );
             return (
-              <Form onSubmit={this.handleSubmit}>
+              <Form onSubmit={this.handleSubmit} onUpdate={context.authUser}>
                 <InputText
                   type="text"
                   value={this.state.nick}
@@ -112,7 +114,7 @@ export default class SignIn extends React.Component {
                     textDecoration: "none"
                   }}
                 >
-                  <Button type="submit" text="Sign in" />
+                  <Button type="submit" text="Sign in" setParams={context} />
                 </div>
                 <Link
                   to="/register"

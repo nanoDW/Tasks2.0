@@ -29,21 +29,8 @@ export default class App extends React.Component {
     this.setState({ nick: nick, role: role, token: token });
   };
 
-  // renderView = () => {
-  //   return this.state.hasToken ? (
-  //     <UserPanel />
-  //   ) : (
-  //     <LoggedUser.Provider
-  //       value={{ state: this.state, authUser: this.authUser }}
-  //     >
-  //       {" "}
-  //       <LandingPage />
-  //     </LoggedUser.Provider>
-  //   );
-  // };
-
-  render() {
-    const renderView = this.state.hasToken ? (
+  renderView = () => {
+    return this.state.hasToken ? (
       <UserPanel />
     ) : (
       <LoggedUser.Provider
@@ -53,10 +40,13 @@ export default class App extends React.Component {
         <LandingPage />
       </LoggedUser.Provider>
     );
+  };
+
+  render() {
     return (
       <>
         <GlobalStyle />
-        {renderView}
+        {this.renderView()}
         <Footer />
       </>
     );
