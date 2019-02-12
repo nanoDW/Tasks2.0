@@ -49,7 +49,11 @@ export default class SignIn extends React.Component {
       if (validation.result) {
         const res = await axios.post("http://localhost:4500/api/auth/", data);
         console.log(res);
-        this.setState({ token: res.headers.xAuthToken, role: res.body.role });
+        this.props.context.authUser({
+          nick: this.state.nick,
+          token: res.headers.xAuthToken,
+          role: res.body.role
+        });
       } else {
         this.setState({ error: validation.message });
       }
@@ -84,48 +88,49 @@ export default class SignIn extends React.Component {
       <Router>
         <LoggedUser.Consumer>
           {context => {
-            console.log(context.state, this.state);
+            return (
+              <Form onSubmit={this.handleSubmit}>
+                <InputText
+                  type="text"
+                  value={this.state.nick}
+                  onChangeDetection={this.handleChange}
+                  name="nick"
+                  labelContent="Enter your login"
+                />
+                <InputText
+                  type="password"
+                  name="password"
+                  value={this.state.password}
+                  onChangeDetection={this.handleChange}
+                  labelContent="Enter your password"
+                />
+                <ErrorMessage>{this.state.error}</ErrorMessage>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "50%",
+                    textDecoration: "none"
+                  }}
+                >
+                  <Button type="submit" text="Sign in" />
+                </div>
+                <Link
+                  to="/register"
+                  style={{
+                    display: "flex",
+                    width: "50%",
+                    textDecoration: "none"
+                  }}
+                >
+                  <Button
+                    type="button"
+                    text="Sign up"
+                    onClick={this.props.onRegister}
+                  />
+                </Link>
+              </Form>
+            );
           }}
-          <Form onSubmit={this.handleSubmit}>
-            <InputText
-              type="text"
-              value={this.state.nick}
-              onChangeDetection={this.handleChange}
-              name="nick"
-              labelContent="Enter your login"
-            />
-            <InputText
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChangeDetection={this.handleChange}
-              labelContent="Enter your password"
-            />
-            <ErrorMessage>{this.state.error}</ErrorMessage>
-            <div
-              style={{
-                display: "flex",
-                width: "50%",
-                textDecoration: "none"
-              }}
-            >
-              <Button type="submit" text="Sign in" />
-            </div>
-            <Link
-              to="/register"
-              style={{
-                display: "flex",
-                width: "50%",
-                textDecoration: "none"
-              }}
-            >
-              <Button
-                type="button"
-                text="Sign up"
-                onClick={this.props.onRegister}
-              />
-            </Link>
-          </Form>
         </LoggedUser.Consumer>
       </Router>
     );
