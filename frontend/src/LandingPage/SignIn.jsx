@@ -23,13 +23,14 @@ const ErrorMessage = styled.p`
   text-align: center;
 `;
 
-export default class SignIn extends React.Component {
+class SignIn extends React.Component {
   state = {
     nick: "",
     password: "",
     role: "",
     token: "",
-    error: ""
+    error: "",
+    hasToken: false
   };
 
   handleChange = e => {
@@ -48,8 +49,17 @@ export default class SignIn extends React.Component {
     try {
       if (validation.result) {
         const res = await axios.post("http://localhost:4500/api/auth/", data);
-        console.log(res);
-        this.setState({ role: res.body.role, token: res.headers.xAuthToken });
+        await this.setState({
+          role: res.data.role,
+          token: res.headers.xauthtoken,
+          hasToken: true
+        });
+        this.props.context.authUser(
+          this.state.nick,
+          this.state.role,
+          this.state.token,
+          this.state.hasToken
+        );
       } else {
         this.setState({ error: validation.message });
       }
@@ -82,59 +92,55 @@ export default class SignIn extends React.Component {
   render() {
     return (
       <Router>
-        <LoggedUser.Consumer>
-          {context => {
-            console.log(context);
-            // context.authUser(
-            //   this.state.nick,
-            //   this.state.role,
-            //   this.state.token
-            // );
-            return (
-              <Form onSubmit={this.handleSubmit} onUpdate={context.authUser}>
-                <InputText
-                  type="text"
-                  value={this.state.nick}
-                  onChangeDetection={this.handleChange}
-                  name="nick"
-                  labelContent="Enter your login"
-                />
-                <InputText
-                  type="password"
-                  name="password"
-                  value={this.state.password}
-                  onChangeDetection={this.handleChange}
-                  labelContent="Enter your password"
-                />
-                <ErrorMessage>{this.state.error}</ErrorMessage>
-                <div
-                  style={{
-                    display: "flex",
-                    width: "50%",
-                    textDecoration: "none"
-                  }}
-                >
-                  <Button type="submit" text="Sign in" setParams={context} />
-                </div>
-                <Link
-                  to="/register"
-                  style={{
-                    display: "flex",
-                    width: "50%",
-                    textDecoration: "none"
-                  }}
-                >
-                  <Button
-                    type="button"
-                    text="Sign up"
-                    onClick={this.props.onRegister}
-                  />
-                </Link>
-              </Form>
-            );
-          }}
-        </LoggedUser.Consumer>
+        <Form onSubmit={this.handleSubmit}>
+          <InputText
+            type="text"
+            value={this.state.nick}
+            onChangeDetection={this.handleChange}
+            name="nick"
+            labelContent="Enter your login"
+          />
+          <InputText
+            type="password"
+            name="password"
+            value={this.state.password}
+            onChangeDetection={this.handleChange}
+            labelContent="Enter your password"
+          />
+          <ErrorMessage>{this.state.error}</ErrorMessage>
+          <div
+            style={{
+              display: "flex",
+              width: "50%",
+              textDecoration: "none"
+            }}
+          >
+            <Button type="submit" text="Sign in" />
+          </div>
+          <Link
+            to="/register"
+            style={{
+              display: "flex",
+              width: "50%",
+              textDecoration: "none"
+            }}
+          >
+            <Button
+              type="button"
+              text="Sign up"
+              onClick={this.props.onRegister}
+            />
+          </Link>
+        </Form>
       </Router>
     );
   }
 }
+
+const withContext = Component => props => (
+  <LoggedUser.Consumer>
+    {context => <Component {...props} context={context} />}
+  </LoggedUser.Consumer>
+);
+
+export const Login = withContext(SignIn);
