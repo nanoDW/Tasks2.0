@@ -15,14 +15,31 @@ body, html, #root {
 }
 `;
 
+export const LoggedUser = React.createContext({});
+
 export default class App extends React.Component {
   state = {
     hasToken: false,
-    token: null
+    token: "",
+    nick: "",
+    role: ""
+  };
+
+  authUser = (nick, role, token) => {
+    this.setState({ nick: nick, role: role, token: token });
   };
 
   renderView = () => {
-    return this.state.hasToken ? <UserPanel /> : <LandingPage />;
+    return this.state.hasToken ? (
+      <UserPanel />
+    ) : (
+      <LoggedUser.Provider
+        value={{ state: this.state, authUser: this.authUser }}
+      >
+        {" "}
+        <LandingPage />
+      </LoggedUser.Provider>
+    );
   };
 
   render() {
