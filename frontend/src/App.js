@@ -25,28 +25,24 @@ export default class App extends React.Component {
     role: ""
   };
 
-  authUser = (nick, role, token) => {
-    this.setState({ nick: nick, role: role, token: token });
+  authUser = (nick, role, token, hasToken) => {
+    this.setState({ nick: nick, role: role, token: token, hasToken: hasToken });
   };
 
   renderView = () => {
-    return this.state.hasToken ? (
-      <UserPanel />
-    ) : (
-      <LoggedUser.Provider
-        value={{ state: this.state, authUser: this.authUser }}
-      >
-        {" "}
-        <LandingPage />
-      </LoggedUser.Provider>
-    );
+    return this.state.hasToken ? <UserPanel /> : <LandingPage />;
   };
 
   render() {
     return (
       <>
         <GlobalStyle />
-        {this.renderView()}
+        <LoggedUser.Provider
+          value={{ state: this.state, authUser: this.authUser }}
+        >
+          {" "}
+          {this.renderView()}
+        </LoggedUser.Provider>
         <Footer />
       </>
     );

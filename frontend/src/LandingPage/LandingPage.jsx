@@ -1,5 +1,5 @@
 import React from "react";
-import SignIn from "./SignIn";
+import { Login } from "./SignIn";
 import Register from "./Register";
 import Header from "./Header";
 import Assumptions from "./Assumptions";
@@ -11,7 +11,7 @@ export default class LandingPage extends React.Component {
 
   setView = () => {
     return this.state.hasAccount ? (
-      <SignIn onRegister={this.changeView} />
+      <Login onRegister={this.changeView} />
     ) : (
       <Register onLogin={this.onSignIn} />
     );

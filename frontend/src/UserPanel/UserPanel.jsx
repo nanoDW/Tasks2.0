@@ -1,6 +1,6 @@
 import React from "react";
 import Nav from "./Nav";
-import UserInfo from "./UserInfo";
+import { UserNav } from "./UserInfo";
 import Dashboard from "./Dashboard";
 
 export default class UserPanel extends React.Component {
@@ -12,7 +12,7 @@ export default class UserPanel extends React.Component {
     return (
       <div>
         <Nav />
-        <UserInfo />
+        <UserNav />
         <Dashboard />
       </div>
     );
