@@ -23,6 +23,12 @@ const ErrorMessage = styled.p`
   text-align: center;
 `;
 
+const FlexContainer = styled.div`
+  display: flex;
+  width: 50%;
+  text-decoration: none;
+`;
+
 class SignIn extends React.Component {
   state = {
     nick: "",
@@ -108,15 +114,9 @@ class SignIn extends React.Component {
             labelContent="Enter your password"
           />
           <ErrorMessage>{this.state.error}</ErrorMessage>
-          <div
-            style={{
-              display: "flex",
-              width: "50%",
-              textDecoration: "none"
-            }}
-          >
+          <FlexContainer>
             <Button type="submit" text="Sign in" />
-          </div>
+          </FlexContainer>
           <Link
             to="/register"
             style={{
