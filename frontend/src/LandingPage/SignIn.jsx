@@ -3,7 +3,7 @@ import { InputText } from "../components/InputText";
 import styled from "styled-components";
 import { Button } from "../components/Button";
 import axios from "axios";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { LoggedUser } from "../App";
 
 const Form = styled.form`
@@ -97,42 +97,40 @@ class SignIn extends React.Component {
 
   render() {
     return (
-      <Router>
-        <Form onSubmit={this.handleSubmit}>
-          <InputText
-            type="text"
-            value={this.state.nick}
-            onChangeDetection={this.handleChange}
-            name="nick"
-            labelContent="Enter your login"
+      <Form onSubmit={this.handleSubmit}>
+        <InputText
+          type="text"
+          value={this.state.nick}
+          onChangeDetection={this.handleChange}
+          name="nick"
+          labelContent="Enter your login"
+        />
+        <InputText
+          type="password"
+          name="password"
+          value={this.state.password}
+          onChangeDetection={this.handleChange}
+          labelContent="Enter your password"
+        />
+        <ErrorMessage>{this.state.error}</ErrorMessage>
+        <FlexContainer>
+          <Button type="submit" text="Sign in" />
+        </FlexContainer>
+        <Link
+          to="/register"
+          style={{
+            display: "flex",
+            width: "50%",
+            textDecoration: "none"
+          }}
+        >
+          <Button
+            type="button"
+            text="Sign up"
+            onClick={this.props.onRegister}
           />
-          <InputText
-            type="password"
-            name="password"
-            value={this.state.password}
-            onChangeDetection={this.handleChange}
-            labelContent="Enter your password"
-          />
-          <ErrorMessage>{this.state.error}</ErrorMessage>
-          <FlexContainer>
-            <Button type="submit" text="Sign in" />
-          </FlexContainer>
-          <Link
-            to="/register"
-            style={{
-              display: "flex",
-              width: "50%",
-              textDecoration: "none"
-            }}
-          >
-            <Button
-              type="button"
-              text="Sign up"
-              onClick={this.props.onRegister}
-            />
-          </Link>
-        </Form>
-      </Router>
+        </Link>
+      </Form>
     );
   }
 }

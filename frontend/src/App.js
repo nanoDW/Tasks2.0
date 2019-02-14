@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import UserPanel from "./UserPanel/UserPanel";
 import LandingPage from "./LandingPage/LandingPage";
@@ -29,22 +30,32 @@ export default class App extends React.Component {
     this.setState({ nick: nick, role: role, token: token, hasToken: hasToken });
   };
 
+  logout = () => {
+    this.setState({ hasToken: false });
+  };
+
   renderView = () => {
     return this.state.hasToken ? <UserPanel /> : <LandingPage />;
   };
 
   render() {
     return (
-      <>
-        <GlobalStyle />
-        <LoggedUser.Provider
-          value={{ state: this.state, authUser: this.authUser }}
-        >
-          {" "}
-          {this.renderView()}
-        </LoggedUser.Provider>
-        <Footer />
-      </>
+      <Router>
+        <>
+          <GlobalStyle />
+          <LoggedUser.Provider
+            value={{
+              state: this.state,
+              authUser: this.authUser,
+              logout: this.logout
+            }}
+          >
+            {" "}
+            {this.renderView()}
+          </LoggedUser.Provider>
+          <Footer />
+        </>
+      </Router>
     );
   }
 }
