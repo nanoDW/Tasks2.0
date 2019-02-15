@@ -15,9 +15,30 @@ const Item = styled.li`
   font-size: 16px;
   border-bottom: 2px solid #54dfa6;
   width: 100%;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    content: "";
+    height: 2px;
+    width: 100%;
+    z-index: 2;
+    background: linear-gradient(to right, #54dfa6, #9e54df);
+  }
 
   &:first-child {
-    border-top: 2px solid #54dfa6;
+    &::after {
+      position: absolute;
+      top: 0px;
+      left: 0;
+      content: "";
+      height: 2px;
+      width: 100%;
+      z-index: 2;
+      background: linear-gradient(to right, #54dfa6, #9e54df);
+    }
   }
 `;
 
@@ -36,7 +57,6 @@ export class Nav extends React.Component {
       <nav>
         <List>
           <Item>
-            {console.log(this.props)}
             <StyledLink to="/login" onClick={this.props.onClick}>
               logout
             </StyledLink>
