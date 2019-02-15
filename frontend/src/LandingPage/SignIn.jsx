@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Button } from "../components/Button";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { LoggedUser } from "../App";
+import { ContextLoggedUser } from "../context/ContextHOC";
 
 const Form = styled.form`
   width: 80vw;
@@ -135,10 +135,4 @@ class SignIn extends React.Component {
   }
 }
 
-const withContext = Component => props => (
-  <LoggedUser.Consumer>
-    {context => <Component {...props} context={context} />}
-  </LoggedUser.Consumer>
-);
-
-export const Login = withContext(SignIn);
+export const Login = ContextLoggedUser(SignIn);
