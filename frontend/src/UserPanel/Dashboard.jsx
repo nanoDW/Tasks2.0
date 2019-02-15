@@ -1,9 +1,15 @@
 import React from "react";
-//import Tasks from "./Tasks";
-//import Done from "./Done";
+import { Route } from "react-router-dom";
+import Tasks from "./Tasks";
+import Done from "./Done";
 
 export default class Dashboard extends React.Component {
   render() {
-    return <div>Dashboard</div>;
+    return (
+      <div>
+        <Route exact path="/" component={Tasks} />
+        <Route path="/done" component={Done} />
+      </div>
+    );
   }
 }
