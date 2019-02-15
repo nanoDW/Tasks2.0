@@ -1,6 +1,6 @@
 import React from "react";
 import { api } from "../api/api";
-import { ContextLoggedUser } from "../context/ContextHOC";
+import { withUser } from "../context/withUser";
 
 export default class TasksComponent extends React.Component {
   componentDidMount = async () => {
@@ -9,12 +9,12 @@ export default class TasksComponent extends React.Component {
       //  headers: { xauthtoken: `${this.props.context.state.token}` }
       // }
     );
-    console.log(tasks);
+    console.log(tasks, this.props);
   };
 
   render() {
-    return <div>{console.log(this)}</div>;
+    return <div>{console.log(this, this.props)}</div>;
   }
 }
 
-export const Tasks = ContextLoggedUser(TasksComponent);
+export const Tasks = withUser(TasksComponent);

@@ -1,8 +1,8 @@
 import React from "react";
 import { LoggedUser } from "../App";
 
-export const ContextLoggedUser = Component => props => (
+export const withUser = Component => props => (
   <LoggedUser.Consumer>
-    {context => <Component {...props} context={context} />}
+    {context => <Component {...props} user={context} />}
   </LoggedUser.Consumer>
 );

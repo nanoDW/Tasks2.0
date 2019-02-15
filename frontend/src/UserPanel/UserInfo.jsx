@@ -1,5 +1,5 @@
 import React from "react";
-import { ContextLoggedUser } from "../context/ContextHOC";
+import { withUser } from "../context/withUser";
 import { Nav } from "./Nav";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -101,15 +101,15 @@ class UserInfo extends React.Component {
           <Hamburger onClick={this.changeVisibility} />
         </Header>
         <Div display={this.state.displayStyle}>
-          <Nav onClick={this.props.context.logout} />
+          <Nav onClick={this.props.user.logout} />
         </Div>
         <LoggedAs>
           You're logged as{" "}
-          <StyledLink to="/me">{this.props.context.state.nick}</StyledLink>.
+          <StyledLink to="/me">{this.props.user.state.nick}</StyledLink>.
         </LoggedAs>
       </>
     );
   }
 }
 
-export const UserNav = ContextLoggedUser(UserInfo);
+export const UserNav = withUser(UserInfo);

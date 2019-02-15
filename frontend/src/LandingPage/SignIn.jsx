@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Button } from "../components/Button";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { ContextLoggedUser } from "../context/ContextHOC";
+import { withUser } from "../context/withUser";
 
 const Form = styled.form`
   width: 80vw;
@@ -55,12 +55,12 @@ class SignIn extends React.Component {
     try {
       if (validation.result) {
         const res = await axios.post("http://localhost:4500/api/auth/", data);
-        await this.setState({
+        this.setState({
           role: res.data.role,
           token: res.headers.xauthtoken,
           hasToken: true
         });
-        this.props.context.authUser(
+        this.props.user.authUser(
           this.state.nick,
           this.state.role,
           this.state.token,
@@ -135,4 +135,4 @@ class SignIn extends React.Component {
   }
 }
 
-export const Login = ContextLoggedUser(SignIn);
+export const Login = withUser(SignIn);
