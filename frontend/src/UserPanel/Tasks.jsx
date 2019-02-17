@@ -2,14 +2,13 @@ import React from "react";
 import { api } from "../api/api";
 import { withUser } from "../context/withUser";
 
-export default class TasksComponent extends React.Component {
+class TasksComponent extends React.Component {
   componentDidMount = async () => {
-    const tasks = api.get(
-      "/tasks" //{
-      //  headers: { xauthtoken: `${this.props.context.state.token}` }
-      // }
-    );
-    console.log(tasks, this.props);
+    const tasks = await api.get("/tasks/", {
+      // prettier-ignore
+      headers: { "xAuthToken": `${this.props.user.token}` }
+    });
+    console.log(tasks);
   };
 
   render() {

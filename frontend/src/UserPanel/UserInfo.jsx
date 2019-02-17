@@ -101,11 +101,11 @@ class UserInfo extends React.Component {
           <Hamburger onClick={this.changeVisibility} />
         </Header>
         <Div display={this.state.displayStyle}>
-          <Nav onClick={this.props.user.logout} />
+          <Nav onClick={this.props.user.logout} token={this.props.user.token} />
         </Div>
         <LoggedAs>
           You're logged as{" "}
-          <StyledLink to="/me">{this.props.user.state.nick}</StyledLink>.
+          <StyledLink to="/me">{this.props.user.nick}</StyledLink>.
         </LoggedAs>
       </>
     );

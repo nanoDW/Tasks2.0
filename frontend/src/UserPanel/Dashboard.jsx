@@ -1,6 +1,6 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import Tasks from "./Tasks";
+import { Tasks } from "./Tasks";
 import Done from "./Done";
 
 export default class Dashboard extends React.Component {
