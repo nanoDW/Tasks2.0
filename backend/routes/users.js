@@ -64,7 +64,9 @@ router.post("/", async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
   try {
-    const users = await User.find().select("nick _id last hidden");
+    const users = await User.find()
+      .select("nick _id last hidden")
+      .sort({ nick: 1 });
 
     const data = [];
     users.map(user => {

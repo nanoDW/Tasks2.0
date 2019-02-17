@@ -58,26 +58,29 @@ export class Nav extends React.Component {
         <List>
           <Item>
             <StyledLink to="/login" onClick={this.props.onClick}>
-              logout
+              Logout
             </StyledLink>
           </Item>
           <Item>
-            <StyledLink to="/tasks">current tasks</StyledLink>
+            <StyledLink to="/tasks">Tasks</StyledLink>
           </Item>
           <Item>
-            <StyledLink to="/done">done</StyledLink>
+            <StyledLink to="/tasks/new">Add a task</StyledLink>
           </Item>
           <Item>
-            <StyledLink to="/giventasks">given tasks</StyledLink>
+            <StyledLink to="/messages">Messages</StyledLink>
           </Item>
           <Item>
-            <StyledLink to="/sendmessage">send message</StyledLink>
+            <StyledLink to="/messages/new">New message</StyledLink>
           </Item>
           <Item>
-            <StyledLink to="/messages">messages</StyledLink>
+            <StyledLink to="/users">Find users</StyledLink>
           </Item>
           <Item>
-            <StyledLink to="/friendslist">friends list</StyledLink>
+            <StyledLink to="/friends">Friends</StyledLink>
+          </Item>
+          <Item>
+            <StyledLink to="/statistics">Statistics</StyledLink>
           </Item>
         </List>
       </nav>
