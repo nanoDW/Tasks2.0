@@ -115,7 +115,7 @@ router.get("/user/:id", auth, async (req, res) => {
   }
 });
 
-router.put("/user/:id/changeRole", authAdmin, async (req, res) => {
+router.put("/user/:id/role", authAdmin, async (req, res) => {
   if (req.params.id.length !== 24) {
     return res.status(400).send("Invalid user ID.");
   }
@@ -150,31 +150,6 @@ router.get("/me", auth, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
   if (!user) return res.status(404).send("User of given id does not exist.");
   return res.json({ user });
-});
-
-router.put("/addNote", auth, async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      {
-        $inc: { last: 1 }
-      },
-      { new: true }
-    ).select("-password");
-
-    if (!user) {
-      return res.status(404).send("User of given id does not exist.");
-    }
-
-    const { last } = user;
-    return res.status(200).json({ last });
-  } catch (e) {
-    console.log(e.message);
-
-    return res
-      .status(500)
-      .send("Internal server error. Cannot update user tasks.");
-  }
 });
 
 router.put("/settings", auth, async (req, res) => {
@@ -213,7 +188,7 @@ router.put("/settings", auth, async (req, res) => {
   }
 });
 
-router.put("/hidding", auth, async (req, res) => {
+router.put("/visibility", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
@@ -228,7 +203,7 @@ router.put("/hidding", auth, async (req, res) => {
   }
 });
 
-router.put("/addFriend", auth, async (req, res) => {
+router.put("/friends", auth, async (req, res) => {
   try {
     const [user, friend] = await Promise.all([
       User.findById(req.user._id),
@@ -258,7 +233,7 @@ router.put("/addFriend", auth, async (req, res) => {
   }
 });
 
-router.put("/acceptFriend", auth, async (req, res) => {
+router.put("/friends", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
