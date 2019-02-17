@@ -16,10 +16,7 @@ if (!config.get("jwtPrivateKey")) {
 
 const db = config.get("db");
 mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
+  .connect(db, { useNewUrlParser: true })
   .then(() => console.log(`Connected to the MongoDB: ${db}.`))
   .catch(err =>
     console.log("Connection error. Cannot connect to the MongoDB", err.message)
@@ -29,7 +26,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, xAuthToken"
   );
   res.header("Access-Control-Expose-Headers", "xAuthToken");
   next();
