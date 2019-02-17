@@ -19,12 +19,17 @@ body, html, #root {
 export const LoggedUser = React.createContext({});
 
 export default class App extends React.Component {
-  state = {
-    hasToken: false,
-    token: "",
-    nick: "",
-    role: ""
-  };
+  constructor() {
+    super();
+    this.state = {
+      authUser: this.authUser,
+      logout: this.logout,
+      hasToken: false,
+      token: "",
+      nick: "",
+      role: ""
+    };
+  }
 
   authUser = (nick, role, token, hasToken) => {
     this.setState({ nick: nick, role: role, token: token, hasToken: hasToken });
@@ -43,13 +48,7 @@ export default class App extends React.Component {
       <Router>
         <>
           <GlobalStyle />
-          <LoggedUser.Provider
-            value={{
-              state: this.state,
-              authUser: this.authUser,
-              logout: this.logout
-            }}
-          >
+          <LoggedUser.Provider value={this.state}>
             {" "}
             {this.renderView()}
           </LoggedUser.Provider>
