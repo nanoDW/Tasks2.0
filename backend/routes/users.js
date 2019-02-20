@@ -14,6 +14,8 @@ const express = require("express");
 
 const router = express.Router();
 
+const USER_ID_LENGTH = 24;
+
 router.post("/", async (req, res) => {
   const { body } = req;
   const { error } = validateUser(body);
@@ -25,9 +27,7 @@ router.post("/", async (req, res) => {
       $or: [{ nick: body.nick }, { email: body.email }]
     });
 
-    if (existingUser) {
-      return res.status(404).send("User already exist.");
-    }
+    if (existingUser) return res.status(404).send("User already exist.");
 
     const user = new User({
       nick: body.nick,
@@ -69,7 +69,7 @@ router.get("/", auth, async (req, res) => {
       .sort({ nick: 1 });
 
     const data = [];
-    users.map(user => {
+    users.forEach(user => {
       if (!user.hidden) {
         data.push({ _id: user._id, nick: user.nick, last: user.last });
       }
@@ -96,12 +96,14 @@ router.get("/hidden", authMod, async (req, res) => {
 });
 
 router.get("/user/:id", auth, async (req, res) => {
-  if (req.params.id.length !== 24) {
+  const { id } = req.params;
+
+  if (id.length !== USER_ID_LENGTH) {
     return res.status(400).send("Invalid user ID.");
   }
 
   try {
-    const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findById(id).select("-password");
     if (!user) {
       return res.status(404).send("User of given id does not exist.");
     }
@@ -116,18 +118,20 @@ router.get("/user/:id", auth, async (req, res) => {
 });
 
 router.put("/user/:id/role", authAdmin, async (req, res) => {
-  if (req.params.id.length !== 24) {
+  const { id } = req.params;
+
+  if (id.length !== 24) {
     return res.status(400).send("Invalid user ID.");
   }
 
   try {
-    const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findById(id).select("-password");
     if (!user) {
       return res.status(404).send("User of given id does not exist.");
     }
 
     user.role = user.role === "user" ? "mod" : "user";
-    user.save();
+    await user.save();
 
     const updatedUser = {
       nick: user.nick,
@@ -147,26 +151,38 @@ router.put("/user/:id/role", authAdmin, async (req, res) => {
 });
 
 router.get("/me", auth, async (req, res) => {
-  const user = await User.findById(req.user._id).select("-password");
+  const { _id } = req.user;
+
+  const user = await User.findById(_id).select("-password");
+
   if (!user) return res.status(404).send("User of given id does not exist.");
+
   return res.json({ user });
 });
 
-router.get("/statistics", auth, async (req, res) => {
+router.get("/account", auth, async (req, res) => {
   const { nick, _id } = req.user;
 
   try {
-    const user = await User.findById(_id).select(
-      "nick last accountCreated friends"
-    );
+    const [user, tasks, messages] = await Promise.all([
+      User.findById(_id).select("nick last accountCreated friends"),
+
+      Task.find({
+        $or: [{ user: _id }, { author: nick, accepted: true }]
+      }),
+
+      Message.find({
+        $or: [
+          { userID: _id, deletedByUser: false },
+          { authorID: _id, deletedByAuthor: false }
+        ]
+      })
+    ]);
+
     if (!user) return res.status(404).send("User of given id does not exist.");
 
     const friendsAccepted = user.friends.filter(friend => {
       return friend.accepted === true;
-    });
-
-    const tasks = await Task.find({
-      $or: [{ user: _id }, { author: nick, accepted: true }]
     });
 
     const tasksValues = {
@@ -183,19 +199,6 @@ router.get("/statistics", auth, async (req, res) => {
         console.log(".");
       });
     }
-
-    const messages = await Message.find({
-      $or: [
-        {
-          userID: _id,
-          deletedByUser: false
-        },
-        {
-          authorID: _id,
-          deletedByAuthor: false
-        }
-      ]
-    });
 
     const sentMessages = messages.filter(message => message.userID === _id);
     const receivedMessagesLength = messages.length - sentMessages.length;
@@ -221,29 +224,27 @@ router.get("/statistics", auth, async (req, res) => {
 });
 
 router.put("/settings", auth, async (req, res) => {
+  const { body, user } = req;
+
   try {
-    let message = null;
-    const { error } = validatePasswordAndEmail(req.body);
+    let message = [];
+    const { error } = validatePasswordAndEmail(body);
 
     if (error) {
       return res.status(400).send(error.details[0].message);
     }
 
-    if (req.body.password) {
-      const user = await User.findById(req.user._id);
+    const activeUser = await User.findById(user._id);
 
+    if (body.password) {
       const salt = await bcrypt.genSalt();
-      user.password = await bcrypt.hash(user.password, salt);
-
-      user.save();
-      message = "Password has been updated.";
+      activeUser.password = await bcrypt.hash(activeUser.password, salt);
+      message.push("Password has been updated. ");
     }
 
-    if (req.body.email) {
-      await User.findByIdAndUpdate(req.user._id, {
-        email: req.body.email
-      });
-      message = "Email has been updated.";
+    if (body.email) {
+      activeUser.email = body.email;
+      message.push("Email has been updated.");
     }
 
     return res.status(200).send(message);
@@ -257,8 +258,10 @@ router.put("/settings", auth, async (req, res) => {
 });
 
 router.put("/visibility", auth, async (req, res) => {
+  const { _id } = req.user;
+
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(_id);
 
     user.hidden = !user.hidden;
     user.save();
@@ -305,14 +308,13 @@ router.put("/friends", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    for (let i = 0; i < user.friends.length; i++) {
-      const friend = user.friends[i];
-      if (friend.userID === req.body._id) {
-        if (friend.accepted === true) {
-          return res
-            .status(400)
-            .send("Cannot accept an invitation. It has been already accepted.");
-        }
+    const friend = user.friends.find(friend => friend.userID === req.body._id);
+
+    if (friend) {
+      if (friend.accepted === true) {
+        return res
+          .status(400)
+          .send("Cannot accept an invitation. It has been already accepted.");
       } else {
         friend.accepted = true;
       }
@@ -331,7 +333,7 @@ router.put("/friends", auth, async (req, res) => {
 });
 
 router.delete("/friends/:id", auth, async (req, res) => {
-  if (req.params.id.length !== 24) {
+  if (req.params.id.length !== USER_ID_LENGTH) {
     return res.status(400).send("Invalid user ID.");
   }
 
@@ -343,7 +345,7 @@ router.delete("/friends/:id", auth, async (req, res) => {
     }
 
     let updatedList = [];
-    user.friends.map(friend => {
+    user.friends.forEach(friend => {
       if (friend.userID !== req.params.id) {
         updatedList.push(friend);
       }
