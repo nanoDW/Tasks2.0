@@ -20,7 +20,8 @@ body:
 {
   "_id": "5c4f26f8e7fe4c32d8a57cf5",
   "nick": "nanoDW",
-  "email": "nano193@gmail.com"
+  "email": "nano193@gmail.com",
+  "role": "user"
 }
 ```
 
@@ -66,27 +67,32 @@ GET /users/
     {
       "_id": "5c4f269ce7fe4c32d8a57cf4",
       "nick": "nano12",
-      "last": 0
+      "last": 0,
+      "role": "user"
     },
     {
       "_id": "5c4f8732d71a533f90156839",
       "nick": "nano123",
-      "last": 0
+      "last": 0,
+      "role": "user"
     },
     {
       "_id": "5c4f8754d71a533f9015683b",
       "nick": "nano809",
-      "last": 0
+      "last": 0,
+      "role": "user"
     },
     {
       "_id": "5c4f8742d71a533f9015683a",
       "nick": "nano",
-      "last": 0
+      "last": 0,
+      "role": "user"
     },
     {
       "_id": "5c5052b0ec96553b6cffc3ca",
       "nick": "newAccount",
-      "last": 0
+      "last": 0,
+      "role": "user"
     }
   ]
 }
@@ -106,6 +112,7 @@ example of response:
       "nick": "nano12",
       "email": "nanoDW@gmail.com",
       "accountCreated": "2019-01-28T15:58:20.626Z",
+      "role": "user",
       "friends": [
         {
           "accepted": false,
@@ -135,6 +142,7 @@ example of response:
       "nick": "nano123",
       "email": "nano123@gmail.com",
       "accountCreated": "2019-01-28T22:50:26.871Z",
+      "role": "user",
       "friends": [],
       "**v": 0
     },
@@ -145,6 +153,7 @@ example of response:
       "nick": "nano809",
       "email": "nano809@gmail.com",
       "accountCreated": "2019-01-28T22:51:00.512Z",
+      "role": "user",
       "friends": [],
       "**v": 0
     },
@@ -155,6 +164,7 @@ example of response:
       "nick": "nano",
       "email": "nano@gmail.com",
       "accountCreated": "2019-01-28T22:50:42.395Z",
+      "role": "user",
       "friends": [
         {
           "accepted": false,
@@ -172,6 +182,7 @@ example of response:
       "nick": "newAccount",
       "email": "newaccount@gmail.com",
       "accountCreated": "2019-01-29T13:18:40.806Z",
+      "role": "user",
       "friends": [],
       "**v": 0
     },
@@ -182,6 +193,7 @@ example of response:
       "nick": "nanoDW",
       "email": "nano193@gmail.com",
       "accountCreated": "2019-01-28T15:59:52.014Z",
+      "role": "user",
       "friends": [
         {
           "accepted": true,
@@ -217,7 +229,8 @@ example of response:
   "nick": "nano12",
   "_id": "5c4f269ce7fe4c32d8a57cf4",
   "last": 0,
-  "accountCreated": "2019-01-28T15:58:20.626Z"
+  "accountCreated": "2019-01-28T15:58:20.626Z",
+  "role": "user"
 }
 ```
 
@@ -234,6 +247,7 @@ example of response:
     "nick": "nanoDW",
     "email": "nano193@gmail.com",
     "accountCreated": "2019-01-28T15:59:52.014Z",
+    "role": "user",
     "friends": [
       {
         "accepted": true,
@@ -256,16 +270,6 @@ example of response:
     ],
     "__v": 5
   }
-}
-```
-
-update a note counter
-PUT /users/addNote
-example of response:
-
-```json
-{
-  "last": 10
 }
 ```
 
@@ -307,7 +311,7 @@ Email has been updated.
 ```
 
 change visibility status
-PUT /users/hidding
+PUT /users/visibility
 example of response:
 
 ```js
@@ -321,7 +325,7 @@ true;
 ```
 
 add new friend
-PUT /users/addFriend
+PUT /users/friends
 body of request:
 
 ```js
@@ -338,7 +342,7 @@ Success! Added newAccount to your friends list.
 ```
 
 accept a friend invitation
-PUT /users/acceptFriend
+PUT /users/friends/:id
 body of request:
 
 ```js
@@ -370,7 +374,9 @@ Account succesfully deleted.
 ```
 
 changing user permissions ADMIN ONLY
-PUT /user/:id/changeRole
+PUT /users/user/:id/role
+
+example of response:
 
 ```js
 {
@@ -380,3 +386,83 @@ PUT /user/:id/changeRole
     "role": "mod"
 }
 ```
+
+add a task
+POST /tasks/
+
+body of request:
+
+```js
+{
+      description: 2-160 characters, required,
+      priority: number, 1-5, default: 1,
+      deadline: "2019-01-28T15:58:20.626Z"
+    }
+```
+
+example of response:
+
+```js
+{
+  nick, description, priority, deadline, created;
+}
+```
+
+get your tasks
+GET /tasks/
+
+example of response:
+
+````js
+{
+  "tasks":
+  [
+  {
+  nick, description, priority, deadline, created;
+},
+  {
+  nick, description, priority, deadline, created;
+},
+  {
+  nick, description, priority, deadline, created;
+},
+  {
+  nick, description, priority, deadline, created;
+}
+  ],
+    "givenTasks":
+  [
+  {
+  nick, description, priority, deadline, created;
+},
+  {
+  nick, description, priority, deadline, created;
+},
+  {
+  nick, description, priority, deadline, created;
+},
+  {
+  nick, description, priority, deadline, created;
+}
+  ]
+}
+
+get user statistics
+GET /users/statistics
+
+example of response:
+```json
+{
+    "response": {
+        "nick": "nanoDW",
+        "createdTasks": 0,
+        "accountCreated": "2019-02-08T13:31:26.300Z",
+        "friendsAmount": 0,
+        "activeTasks": 0,
+        "doneTasks": 0,
+        "givenTasks": 0,
+        "receivedMessages": 0,
+        "sentMessages": 0
+    }
+}```
+````
