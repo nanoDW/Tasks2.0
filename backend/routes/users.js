@@ -77,7 +77,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.get("/user/:id", auth, async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   const { id } = req.params;
 
   if (id.length !== USER_ID_LENGTH) {

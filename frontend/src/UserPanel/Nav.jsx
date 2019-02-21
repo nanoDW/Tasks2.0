@@ -67,7 +67,7 @@ export class Nav extends React.Component {
           <Item>
             <StyledLink to="/tasks/new">Add a task</StyledLink>
           </Item>
-          <Item>
+          {/* <Item>
             <StyledLink to="/messages">Messages</StyledLink>
           </Item>
           <Item>
@@ -81,7 +81,7 @@ export class Nav extends React.Component {
           </Item>
           <Item>
             <StyledLink to="/statistics">Statistics</StyledLink>
-          </Item>
+          </Item> */}
         </List>
       </nav>
     );

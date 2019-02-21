@@ -1,14 +1,16 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { Tasks } from "./Tasks";
-import Done from "./Done";
+import NewTask from "./Done";
 
 export default class Dashboard extends React.Component {
   render() {
     return (
       <div>
-        <Route exact path="/tasks" component={Tasks} />
-        <Route path="/done" component={Done} />
+        <Switch>
+          <Route exact path="/tasks" component={Tasks} />
+          <Route path="/tasks/new" component={NewTask} />
+        </Switch>
       </div>
     );
   }

@@ -56,6 +56,8 @@ example of response:
 }
 ```
 
+// IT WORKS //
+
 ALL ROUTES BELOW ARE USING TOKENS.
 
 get list of the users - TOKEN IS REQUIRED

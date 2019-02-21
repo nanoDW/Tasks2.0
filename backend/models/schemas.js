@@ -23,8 +23,7 @@ const taskSchema = new Schema(
       required: true
     },
     deadline: {
-      type: Date,
-      default: null
+      type: Date
     },
     created: {
       type: Date,
