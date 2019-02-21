@@ -98,4 +98,28 @@ router.get("/stats", authAdmin, async (req, res) => {
   }
 });
 
+router.get("/tasks", authMod, async (req, res) => {
+  try {
+    const tasks = await Task.find();
+
+    return res.sendStatus(200).json({ tasks });
+  } catch (e) {
+    console.log(e.message);
+
+    return res.status(500).send("Internal server error. Cannot get tasks");
+  }
+});
+
+router.get("/messages", authAdmin, async (req, res) => {
+  try {
+    const messages = await Message.find();
+
+    return res.status(200).json({ messages });
+  } catch (e) {
+    console.log(e.message);
+
+    return res.status(500).send("Internal server error. Cannot get message");
+  }
+});
+
 module.exports = router;
