@@ -176,7 +176,7 @@ router.get("/account", auth, async (req, res) => {
   }
 });
 
-router.put("/settings", auth, async (req, res) => {
+router.put("/data", auth, async (req, res) => {
   const { body, user } = req;
 
   try {
