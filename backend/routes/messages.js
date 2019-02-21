@@ -2,7 +2,6 @@ const express = require("express");
 const { User, Message } = require("../models/schemas");
 const { validateMessage } = require("../models/validate");
 const auth = require("../middleware/auth");
-const authAdmin = require("../middleware/authAdmin");
 
 const router = express.Router();
 
@@ -201,18 +200,6 @@ router.delete("/sent/:id", auth, async (req, res) => {
     }
 
     return res.status(200).send("Message was deleted.");
-  } catch (e) {
-    console.log(e.message);
-
-    return res.status(500).send("Internal server error. Cannot get message");
-  }
-});
-
-router.get("/all", authAdmin, async (req, res) => {
-  try {
-    const messages = await Message.find();
-
-    return res.status(200).json({ messages });
   } catch (e) {
     console.log(e.message);
 
