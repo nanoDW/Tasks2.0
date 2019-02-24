@@ -10,6 +10,12 @@ router.put("/data", auth, async (req, res) => {
   const { body, user } = req;
 
   try {
+    if (!body.password && !body.email) {
+      return res
+        .status(400)
+        .send("Error. New password or email can't be empty.");
+    }
+
     let message = [];
     const { error } = validatePasswordAndEmail(body);
 
