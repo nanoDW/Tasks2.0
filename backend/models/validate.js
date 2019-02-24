@@ -9,7 +9,6 @@ const validateTask = task => {
     user: Joi.string()
       .min(3)
       .max(25)
-      .required()
       .trim(),
     description: Joi.string()
       .min(2)
@@ -85,6 +84,7 @@ const validateLogAndPass = data => {
 
 const validateMessage = data => {
   const schema = {
+    userID: Joi.string().required(),
     topic: Joi.string()
       .min(1)
       .max(48)

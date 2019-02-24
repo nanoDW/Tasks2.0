@@ -39,7 +39,6 @@ const taskSchema = new Schema(
     note: {
       type: String,
       default: "",
-      minlength: 1,
       maxlength: 480
     }
   },
