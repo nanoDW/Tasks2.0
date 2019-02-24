@@ -3,11 +3,16 @@ const auth = require("../middleware/auth");
 const { User } = require("../models/schemas");
 
 const express = require("express");
-
 const router = express.Router();
 
-router.put("/", auth, async (req, res) => {
+const USER_ID_LENGTH = 24;
+
+router.post("/", auth, async (req, res) => {
   try {
+    if (!req.body._id || !req.body.nick) {
+      return res.status(400).send("Nick or _id is not valid.");
+    }
+
     const [user, friend] = await Promise.all([
       User.findById(req.user._id),
       User.findById(req.body._id)
