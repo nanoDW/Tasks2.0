@@ -4,23 +4,35 @@ const { validateMessage } = require("../models/validate");
 const auth = require("../middleware/auth");
 
 const router = express.Router();
+const MESSAGE_ID_LENGTH = 24;
 
-router.post("/user/:id", auth, async (req, res) => {
-  const { user, body, params } = req;
+router.post("/", auth, async (req, res) => {
+  const { user, body } = req;
   const { error } = validateMessage(body);
 
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
 
-  try {
-    const sendTo = await User.findById(params.id);
+  if (!body.userID) {
+    return res.status(400).send("User id is required");
+  }
 
+  try {
+    const sendTo = await User.findById(body.userID);
+
+    if (!sendTo) {
+      return res.status(400).send("User of given id does not exist.");
+    }
+
+    JSON.stringify(sendTo);
+
+    console.log(sendTo);
     const message = new Message({
       author: user.nick,
       authorID: user._id,
-      addressedTo: sendTo.nick,
-      userID: sendTo._id,
+      adressedTo: sendTo.nick,
+      userID: body.userID,
       deletedByAuthor: false,
       deletedByUser: false,
       topic: body.topic,
@@ -28,6 +40,8 @@ router.post("/user/:id", auth, async (req, res) => {
       sent: Date.now(),
       seen: false
     });
+
+    await message.save();
 
     return res.status(200).json({ message });
   } catch (e) {
@@ -56,9 +70,9 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.put("/received/:id", auth, async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const { params, user } = req;
-  if (req.params.id.length !== 24) {
+  if (req.params.id.length !== MESSAGE_ID_LENGTH) {
     return res.status(400).send("Invalid task ID.");
   }
 
