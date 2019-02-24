@@ -4,6 +4,7 @@ const { validateTask } = require("../models/validate");
 const auth = require("../middleware/auth");
 
 const router = express.Router();
+const TASK_ID_LENGTH = 24;
 
 router.post("/", auth, async (req, res) => {
   const { body, user } = req;
@@ -15,7 +16,7 @@ router.post("/", auth, async (req, res) => {
     await User.findByIdAndUpdate(user._id, { $inc: { last: 1 } });
 
     const task = new Task({
-      nick: user._id,
+      user: user._id,
       description: body.description,
       priority: body.priority,
       deadline: body.deadline,
@@ -35,9 +36,9 @@ router.post("/", auth, async (req, res) => {
 router.get("/", auth, async (req, res) => {
   try {
     const tasks = await Task.find({ user: req.user._id });
-    const givenTasks = await Task.find({ author: req.user.nick });
+    const sentTasks = await Task.find({ author: req.user.nick });
 
-    return res.status(200).json({ tasks, givenTasks });
+    return res.status(200).json({ tasks, sentTasks });
   } catch (e) {
     console.log(e.message);
 
@@ -45,8 +46,8 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.put("/editTask/:id", auth, async (req, res) => {
-  if (req.params.id.length !== 24) {
+router.put("/edition/:id", auth, async (req, res) => {
+  if (req.params.id.length !== TASK_ID_LENGTH) {
     return res.status(400).send("Invalid task ID.");
   }
 
@@ -68,8 +69,8 @@ router.put("/editTask/:id", auth, async (req, res) => {
   }
 });
 
-router.put("/complete/:id", auth, async (req, res) => {
-  if (req.params.id.length !== 24) {
+router.put("/completed/:id", auth, async (req, res) => {
+  if (req.params.id.length !== TASK_ID_LENGTH) {
     return res.status(400).send("Invalid task ID.");
   }
 
@@ -93,8 +94,8 @@ router.put("/complete/:id", auth, async (req, res) => {
   }
 });
 
-router.delete("/delete/:id", auth, async (req, res) => {
-  if (req.params.id.length !== 24) {
+router.delete("/deleted/:id", auth, async (req, res) => {
+  if (req.params.id.length !== TASK_ID_LENGTH) {
     return res.status(400).send("Invalid task ID.");
   }
 
